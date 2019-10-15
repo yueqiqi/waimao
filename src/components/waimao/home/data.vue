@@ -1,9 +1,11 @@
 <!-- 数据统计 -->
 <template>
 <div class='data'>
-  <div class="boxs d-flex">
+  <!-- 数量 -->
+  <div class="boxs">
     <div v-for="(item,i) in boxs" :key="i">
       <div class="box">
+          <router-link :to="item.link">
         <div class="d-flex">
           <div style="width:31px;height:31px;line-height:107px;margin-left:16px;">
             <img style="width:31px;height:31px;" :src="item.src" alt=""/>
@@ -12,9 +14,66 @@
           <span class="eng">{{item.eng}}</span>
         </div>
         <div class="num">{{item.num}}</div>
+          </router-link>
       </div>
     </div>
   </div>
+  <!-- 订单状态/消息通知 -->
+  <div class="d-flex">
+    <!-- 订单状态 -->
+  <div class="orderstate">
+    <div class="d-flex">
+      <div style="width:31px;height:31px;line-height:107px;margin-left:16px;"><img style="width:31px;height:31px;" src="../../../assets/waimao/icon/orderstate.png" alt=""></div>
+      <div class="title">订单状态</div>
+      <div class="eng">Order Status</div>
+      <div class="line"></div>
+    </div>
+    <!-- 第一排 -->
+    <div class="d-spb mm" style="margin-left:16px;margin-right:16px;">
+      <div class="statusBoxs" v-for="(item,i) in status" :key="i">
+        <router-link :to="item.link">
+          <div class="stitle">{{item.title}}</div>
+          <div class="snum">{{item.num}}</div>
+        </router-link>
+      </div>
+    </div>
+    <!-- 第二排 -->
+    <div class="d-spb mm" style="margin-left:16px;margin-right:16px;margin-top:10px;">
+      <div v-for="(item,i) in status2"  class="statusBoxs" :key="i">
+        <router-link :to="item.link">
+          <div class="stitle">{{item.title}}</div>
+          <div class="snum">{{item.num}}</div>
+        </router-link>
+      </div>
+    </div>
+  </div>
+    <!-- 消息通知 -->
+    <div class="mes">
+      <div class="d-flex">
+        <div style="width:31px;height:31px;line-height:107px;margin-left:16px;"><img style="width:31px;height:31px;" src="../../../assets/waimao/icon/mes.png" alt=""></div>
+        <div class="title">消息通知</div>
+        <div class="eng">Notification</div>
+        <div class="line"></div>
+      </div>
+    <!-- 文字信息 -->
+    <div  class="a" >
+      <div v-for="(item,i) in mes" :key="i" style="width:174px;">
+        <router-link :to="item.link" style="width:174px;">  
+          <div class="d-flex" style="margin-left:57px;height:20px;width:174px;">
+            <div class="point"></div>
+            <div class="font">{{item.font}}</div>
+          </div>        
+        </router-link>
+      </div>
+    </div>
+  </div>
+    <!-- =================== -->
+    <!-- 广告图 -->
+  </div>
+    <div class="ad">
+      <img :src="ad" alt=""> 
+    </div>
+
 </div>
 </template>
 
@@ -28,31 +87,110 @@ components: {},
 data() {
 //这里存放数据
 return {
+  ad:require("../../../assets/waimao/index/ad.png"),
+  // 消息
+  mes:[
+    {
+      id:"0",
+      font:"您有新的委托订单待处理",
+      link:"/demo"
+    },
+    {
+      id:"1",
+      font:"您有新的委托订单待处理",
+      link:"/demo"
+    },
+    {
+      id:"2",
+      font:"您有新的委托订单待处理",
+      link:"/demo"
+    },
+    {
+      id:"3",
+      font:"您有新的委托订单待处理",
+      link:"/demo"
+    },
+    {
+      id:"4",
+      font:"您有新的委托订单待处理",
+      link:"/demo"
+    }
+  ],
+  // 订单状态
+  status:[
+    {
+      link:"/demo",
+      title:"用户下单",
+      num:10
+    },
+    {
+      link:"/demo2",
+      title:"订单准入",
+      num:8
+    },
+    {
+      link:"/demo",
+      title:"合同签订",
+      num:10
+    },
+    {
+      link:"/demo2",
+      title:"验货出货",
+      num:8
+    },
+  ],
+   status2:[
+    {
+      link:"/demo2",
+      title:"收款付款",
+      num:10
+    },
+    {
+      link:"/demo2",
+      title:"报关运输",
+      num:8
+    },
+    {
+      link:"/demo2",
+      title:"缴税退税",
+      num:10
+    },
+    {
+      link:"/demo",
+      title:"结算汇总",
+      num:8
+    },
+  ],
+  // 、、、、、、、、、、、、、、
 boxs:[
   // 用户数量
   {
-    src:require('../../../assets/waimao/index/usernum.png'),
+    link:"demo",
+    src:require('../../../assets/waimao/icon/usernum.png'),
     title:"用户总量",
     eng:"Total user",
     num:90,
   },
   // 订单总量
   {
-    src:require('../../../assets/waimao/index/ordernum.png'),
+    link:"demo",
+    src:require('../../../assets/waimao/icon/ordernum.png'),
     title:"订单总量",
     eng:"Total order",
     num:"",
   },
   // 进口订单数量
   {
-    src:require('../../../assets/waimao/index/inorder.png'),
+    link:"demo",
+    src:require('../../../assets/waimao/icon/inorder.png'),
     title:"进口订单数量",
     eng:"import orders",
     num:80,
   },
   // 出口订单总量
   {
-    src:require('../../../assets/waimao/index/outorder.png'),
+    link:"demo",
+    src:require('../../../assets/waimao/icon/outorder.png'),
     title:"出口订单数量",
     eng:"Export orders",
     num:120,
@@ -98,14 +236,14 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
   display: flex;
   justify-content: space-between;
   /* margin-left:30px; */
-  margin-right:30px;
+  /* margin-right:30px; */
 }
 .box{
-width:390px;
+width:384px;
 height:180px;
 background:rgba(255,255,255,1);
 border-left:6px solid rgba(6,102,164,1);
-margin-right:20px
+margin-right:23px
 }
 /* 标题 */
 .title{
@@ -133,5 +271,74 @@ font-weight:400;
 color:rgba(51,51,51,1);
 line-height:77px;
 margin-left:57px;
+}
+/* 订单状态*/
+.orderstate,.mes{
+  width:803px;height:310px;
+  background:rgba(255,255,255,1);
+  margin-top:31px;
+}
+.line{
+  width:500px;
+height:1px;
+background:rgba(179,179,179,1);
+margin-top:53px;
+margin-left:21px;
+}
+.statusBoxs{
+  width:185px;
+height:90px;
+background:rgba(154,195,220,1);
+border-radius:10px;
+}
+/* 标题 */
+.stitle{
+  padding:10px 0 0 19px;
+  font-size:20px;
+font-family:Microsoft YaHei;
+font-weight:bold;
+color:rgba(255,255,255,1);
+}
+/* 数量 */
+.snum{
+  padding-left:18px;
+  font-size:40px;
+font-family:Microsoft YaHei;
+font-weight:400;
+color:rgba(255,255,255,1);
+}
+.mm>:nth-child(2n){
+background:rgba(177,154,220,1)!important;
+}
+/* 消息通知 */
+.mes{
+  margin-left:24px;
+}
+/* 小红点 */
+.point{
+  width:8px;
+height:8px;
+background:rgba(230,39,39,1);
+border-radius:50%;
+margin:auto 0;
+}
+.font{
+  font-size:14px;
+font-family:Microsoft YaHei;
+font-weight:400;
+color:rgba(51,51,51,1);
+margin-left:11px;
+line-height: 20px;
+}
+.a>:nth-child(1)~div{
+  margin-top:17px;
+}
+/* 广告图 */
+.ad{
+  margin-top:30px;
+}
+.ad img{
+width:1630px;
+height:418px;
 }
 </style>

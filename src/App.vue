@@ -30,6 +30,7 @@ export default {
      padding-bottom:0px;
      overflow-x:hidden;
      font-family:Microsoft YaHei!important;
+     max-width:1920px;min-width:1040px;
    }
 
  .mui-bar-tab .mui-tab-item-tao.mui-active {
@@ -72,14 +73,20 @@ a{
    display: flex;
    justify-content: space-between;
 }
-.bg{
-   width:1920px;
-}
+
 .el-form-item__error{
    position:static!important;
    text-align: center;
 }
 .leftss{
     position:fixed;top:70px;left:0
+}
+.icon{
+   width:31px;height:31px;
+}
+.btn{
+   background:rgba(6,102,164,1);
+   text-align: center;
+   border:0;
 }
 </style>

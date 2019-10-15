@@ -100,15 +100,16 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 <style scoped>
 /* @import url(); 引入公共css类 */
 .bg{
+  /* width:100%; */
   width:1920px;
+  /* min-width:1040px; */
   background:url("./bg.png") no-repeat;
-
-  background-size:100%;
-  height:1064px;
+  background-size:100% auto;
+  height:1054px;
 }
 .img{
   /* width:1900px; */
-  position:absolute;
+  position:relative;
 }
 /* 输入外框 */
 .border{
@@ -116,8 +117,8 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
   background:rgba(255,255,255,0.4);
   border-radius:20px;
   z-index:10;
-  position:relative;
-  top:290px;left:1165px;
+  position:absolute;
+  top:290px;right:259px;
   text-align: center
 }
 .login-text{

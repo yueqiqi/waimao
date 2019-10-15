@@ -5,7 +5,7 @@
 <div class='leftnav'>
   <!-- <el-row class="tac"> -->
     <el-menu
-      default-active="1"
+      default-active="2"
       class="el-menu-vertical-demo"
       router
        @open="handleOpen"
@@ -20,10 +20,6 @@
       <el-menu-item-group>
         <template slot="title"></template>
         <el-menu-item index="/data">数据统计</el-menu-item>
-        <div class="border"></div>
-        <el-menu-item index="/agencySet">角色管理</el-menu-item>
-        <div class="border"></div>
-        <el-menu-item index="/demo">权限管理</el-menu-item>
       </el-menu-item-group>
       </el-submenu>
       <!-- 客户列表 -->
@@ -36,7 +32,7 @@
         </template>
       <el-menu-item-group>
         <template slot="title"></template>
-        <el-menu-item index="/demo2">中方客户</el-menu-item>
+        <el-menu-item index="/chinaUser">中方客户</el-menu-item>
         <div class="border"></div>
         <el-menu-item index="/demo2">外方客户</el-menu-item>
       </el-menu-item-group>

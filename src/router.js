@@ -22,11 +22,10 @@ import perfect from "./components/waimao/login/perfect.vue"
 // 首页
 // ////////////////////////////////
 import Home from "./components/waimao/nav/home.vue"
-import agencySearch from './components/waimao/nav/agencySearch' // 直属下线代理查询
-import agencySet from './components/waimao/nav/agencySet' // 直属下线代理设置
 
 // ////////////////////////
 import data from './components/waimao/home/data' // 直属下线代理设置
+import chinaUser from './components/waimao/home/chinaUser' // 直属下线代理设置
 
 // ////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -71,8 +70,8 @@ export default new Router({
     hidden: true
   },
   {
-    path: '/agencySet',
-    component: agencySet,
+    path: '/chinaUser',
+    component: chinaUser,
   }]
 },
 {

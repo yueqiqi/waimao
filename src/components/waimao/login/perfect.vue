@@ -56,12 +56,13 @@
     </div>
     <!-- 第五行 -->
     <div class="d-flex">
-      <!-- 单位代码 -->
-      <el-form-item label="单位代码">
-        <el-input type="text" placeholder="请提供完整正确的单位代码" v-model="form.code"></el-input>
+      <!-- 地址 -->
+      <el-form-item label="地址">
+        <!-- <el-input type="text" placeholder="请提供完整正确的单位代码" v-model="form.code"></el-input> -->
+        <v-distpicker :province="select.province" :city="select.city" @selected="sub" :area="select.area"></v-distpicker>
       </el-form-item>
     <!-- Facebook -->
-      <el-form-item style="margin-left:101px;" label="Facebook">
+      <el-form-item style="margin-left:34px;" label="Facebook">
         <el-input type="text" placeholder="请填写客户Facebook" v-model="form.userface"></el-input>
       </el-form-item>
     </div>
@@ -77,13 +78,16 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-
+import VDistpicker from 'v-distpicker'
 export default {
   //import引入的组件需要注入到对象中才能使用
 components: {},
 data() {
   //这里存放数据
 return {
+  // 地址选择器
+  select: { province: '', city: '', area: '' },
+  // 
   form:{
     // 客户类型
     type:"",
@@ -118,6 +122,12 @@ methods: {
 submit(){
   console.log(this.form.type)
 },
+// 地址信息
+sub(data){
+	console.log("省份："+data.province.value)
+	console.log("市："+data.city.value)
+	console.log("地区："+data.area.value)
+},
 },
 //生命周期 - 创建完成（可以访问当前this实例）
 created() {
@@ -137,6 +147,24 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 </script>
 <style scoped>
 /* @import url(); 引入公共css类 */
+/* 地区选择器样式 */
+/deep/ .distpicker-address-wrapper select{
+	font-size:14px;
+font-family:Microsoft YaHei;
+font-weight:400;
+color:rgba(153,153,153,1)!important;
+width:120px!important;
+height:30px!important;
+background:rgba(237,237,237,1)!important;
+border-radius:10px!important;
+padding:0;
+padding-left:1.5rem;
+margin-right:9px;
+border:0;
+}
+.distpicker-address-wrapper :last-child{
+  margin-right:0px;
+}
 .perfect{
   /* text-align: center; */
   position:absolute;

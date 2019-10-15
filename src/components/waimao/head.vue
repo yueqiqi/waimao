@@ -1,14 +1,14 @@
 <!--  -->
 <template>
 <div class='min'>
-    <el-row class="bg" type="flex" justify="space-between">
-        <el-col :span="9" >
+    <div class="d-spb" style="width:100%;">
+        <div class="l1">
             <div class="d-flex ma">
                 <img class="logo" src="../../assets/waimao/index/logo.png" alt=""/>
                 <div class="font" style="margin-left:57px;">西安欧尼斯贸易有限公司易兔管理平台</div>
             </div>
-        </el-col>
-        <el-col :span="6" >
+        </div>
+        <div class="l2" >
             <div class="d-flex ma" >
                 <!-- 返回官网 -->
                 <div class="d-flex" >
@@ -25,8 +25,8 @@
                 </div>
                 <!-- 退出 -->
             </div>
-        </el-col>
-    </el-row>
+        </div>
+    </div>
 </div>
 </template>
 
@@ -35,7 +35,7 @@
 //例如：import 《组件名称》 from '《组件路径》';
 
 export default {
-//import引入的组件需要注入到对象中才能使用
+    //import引入的组件需要注入到对象中才能使用
 components: {},
 data() {
 //这里存放数据
@@ -73,11 +73,20 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 </script>
 <style scoped>
 /* @import url(); 引入公共css类 */
+.l1{
+    margin-right:0px;
+}
+.l2{
+ margin-right:160px;
+}
 .ma{
-    margin:auto 0
+    margin:auto 0;
+    /* margin-right:160px; */
 }
 .min{
-    width: 1920px;
+    width: 100%;
+    min-width:1040px;
+    max-width:1920px;
     background:#fff;
 }
 /* 布局方式 */
