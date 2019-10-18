@@ -1,7 +1,6 @@
 <!--  -->
 <template>
 <div class="d-flex">
-
 <div class='leftnav'>
   <!-- <el-row class="tac"> -->
     <el-menu
@@ -49,9 +48,9 @@
         <template slot="title"></template>
         <el-menu-item index="/demo2">委托订单</el-menu-item>
         <div class="border"></div>
-        <el-menu-item index="/demo2">出口订单</el-menu-item>
+        <el-menu-item index="/out">出口订单</el-menu-item>
         <div class="border"></div>
-        <el-menu-item index="/demo2">进口订单</el-menu-item>
+        <el-menu-item index="/inorder">进口订单</el-menu-item>
       </el-menu-item-group>
       </el-submenu>
       <el-submenu index="4">
@@ -76,7 +75,8 @@
 </div>
 <!-- </el-row> -->
 <!-- <el-col  class="content-wrapper"> -->
-  <div style="margin-left:30px;">
+  <div style="margin-left:21px;">
+    <div class="top"></div>
   <transition name="fade" mode="out-in">
      <router-view></router-view>
    </transition>
@@ -239,5 +239,9 @@ opacity:1!important;
 /* color:black!important; */
 background:rgba(6,102,164,1);
 }
-
+.top{
+  width:1719px;height:50px;background:rgba(255,255,255,1);
+  margin-top:1px;
+  margin-left:-30px;
+}
 </style>

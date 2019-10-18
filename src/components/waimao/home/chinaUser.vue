@@ -2,7 +2,6 @@
 <template>
 <div class='chinaUser'>
   <!-- 顶部导航条 -->
-  <div class="top"></div>
   <!-- 塞选查询 -->
   <div class="shaixuan d-flex">
     <div class="img"><img class="icon" src="../../../assets/waimao/icon/saixuan.png" alt=""></div>
@@ -59,25 +58,25 @@
         <table class="table">
           <tr v-for="(item,i) in lists" :key="i" data-id="i">
             <!-- 编号 -->
-            <td style="height:40px;width:90px;">{{item.id}}</td>
+            <td style="height:40px;width:91px;">{{item.id}}</td>
             <!-- 客户类型 -->
-            <td style="height:40px;width:159px;">{{item.usertype}}</td>
+            <td style="height:40px;width:160px;">{{item.usertype}}</td>
             <!-- 用户名 -->
-            <td style="height:40px;width:120px;">{{item.uname}}</td>
+            <td style="height:40px;width:121px;">{{item.uname}}</td>
             <!-- 单位名称 -->
-            <td style="height:40px;width:291px;">{{item.com}}</td>
+            <td style="height:40px;width:292px;">{{item.com}}</td>
             <!-- 联系人 -->
-            <td style="height:40px;width:140px;">{{item.peo}}</td>
+            <td style="height:40px;width:121px;">{{item.peo}}</td>
             <!-- 联系电话 -->
-            <td style="height:40px;width:140px;">{{item.phone}}</td>
+            <td style="height:40px;width:141px;">{{item.phone}}</td>
             <!-- 邮箱 -->
-            <td style="height:40px;width:200px;">{{item.email}}</td>
+            <td style="height:40px;width:201px;">{{item.email}}</td>
             <!-- 所在地 -->
-            <td style="height:40px;width:120px;">{{item.address}}</td>
+            <td style="height:40px;width:121px;">{{item.address}}</td>
             <!-- 加入时间 -->
-            <td style="height:40px;width:140px;">{{item.jointime}}</td>
+            <td style="height:40px;width:141px;">{{item.jointime}}</td>
             <!-- 操作 -->
-            <td style="height:40px;width:180px;">
+            <td style="height:40px;width:181px;">
               <button class="btn look" @click="look(i)">查看</button>
               <button class="btn set" @click="set(i)">编辑</button>
             </td>
@@ -132,7 +131,7 @@ return {
     {
       id:"01",
       usertype:"中方客户",
-      uname:"王麻子",
+      uname:"张三",
       com:"小红花贸易有限公司",
       peo:"李胖子",
       phone:13500000000,
@@ -144,7 +143,7 @@ return {
     {
       id:"02",
       usertype:"中方客户",
-      uname:"王麻子",
+      uname:"李四",
       com:"小红花贸易有限公司",
       peo:"李胖子",
       phone:13500000000,
@@ -168,7 +167,7 @@ return {
     {
       id:"04",
       usertype:"中方客户",
-      uname:"王麻子",
+      uname:"小红",
       com:"小红花贸易有限公司",
       peo:"李胖子",
       phone:13500000000,
@@ -308,19 +307,25 @@ console.log("这是第"+this.cur+"页")
   // 888888888888888888888888888888888888888888888888888888888888
   // 添加用户
   add(){
-    this.lists.push(
-      {
-      id:"05",
-      usertype:"中方客户",
-      uname:"添加用户",
-      com:"小红花贸易有限公司",
-      peo:"张三",
-      phone:13500000000,
-      email:"123456789@qq.com",
-      address:"西安",
-      jointime:"2019-05-20",
+    // this.lists.push(
+    //   {
+    //   id:"05",
+    //   usertype:"中方客户",
+    //   uname:"添加用户",
+    //   com:"小红花贸易有限公司",
+    //   peo:"张三",
+    //   phone:13500000000,
+    //   email:"123456789@qq.com",
+    //   address:"西安",
+    //   jointime:"2019-05-20",
+    //   }
+    // )
+    this.$router.push({
+      path:'/adduser',
+      query:{
+        id:1
       }
-    )
+    })
   },
   // 查看
   look(i){
@@ -343,6 +348,14 @@ console.log("这是第"+this.cur+"页")
     //   address:"西安",
     //   jointime:"2019-05-20",
     //   })
+    var userName=this.lists[i].uname
+    this.$router.push({
+      path:'/setuser',
+      query:{
+        userName,
+        id:1,
+      }
+    })
   },
   // 查询结果
   search(){
@@ -360,7 +373,16 @@ created() {
 mounted() {
 
 },
-beforeCreate() {}, //生命周期 - 创建之前
+beforeCreate() {
+  var query=this.$route.query
+  console.log("添加客户传来的值")
+  // var newarr=query.form.type
+  // this.lists.push({newarr})
+  // var newarr=JSON.parse(query.form)
+  // console.log(newarr);
+  
+  console.log(query.city)
+}, //生命周期 - 创建之前
 beforeMount() {}, //生命周期 - 挂载之前
 beforeUpdate() {}, //生命周期 - 更新之前
 updated() {

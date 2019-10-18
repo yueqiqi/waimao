@@ -6,6 +6,15 @@
 		<div>
 			<v-distpicker :province="select.province" :city="select.city" @selected="sub" :area="select.area"></v-distpicker>
 		</div>
+		<h1>获取储存文件</h1>
+		<div>
+      <div v-for="(item,i) in deluser" :key="i">
+        <div>{{item.id}}</div>
+        <div>{{item.dd}}</div>
+        <div>{{item.peo}}</div>
+      </div>
+		</div>
+    
 </div>
 </template>
 
@@ -19,6 +28,9 @@ components: {},
 data() {
 //这里存放数据
 return {
+  deluser:[],
+	
+				// 地区选择
 select: { province: '', city: '', area: '' },
 };
 },
@@ -28,6 +40,8 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
+	
+	// 选择地区
 sub(data){
 	console.log("省份："+data.province.value)
 	console.log("市："+data.city.value)
@@ -39,7 +53,13 @@ sub(data){
 },
 //生命周期 - 创建完成（可以访问当前this实例）
 created() {
+  var deluser = JSON.parse(localStorage.getItem('deluser'));
+  console.log(localStorage.getItem("deluser"))
+  // console.log(mm)
+  // console.log(deluser.length)
+  console.log(deluser)
 
+  this.deluser=[deluser]
 },
 //生命周期 - 挂载完成（可以访问DOM元素）
 mounted() {

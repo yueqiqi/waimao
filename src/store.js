@@ -1,10 +1,10 @@
-// import Vue from 'vue'
-// import Vuex from 'vuex'
-// Vue.use(Vuex)
-// const state = {
-//     topNavState: 'home',
-//     leftNavState: 'home'
-// }
-// export default new Vuex.Store({
-//     state
-// })
+import Vue from 'vue'
+import Vuex from 'vuex'
+Vue.use(Vuex)
+export default new Vuex.Store({
+    state
+})
+const state={
+  showFooter:true,
+  changableNum:0
+}

@@ -1,5 +1,5 @@
 <template>
- <div class="app-container">
+ <div id="app" class="app-container">
     <app-header></app-header>
     <!-- 引入身子文件 -->
     <router-view style="z-index:999"></router-view>
@@ -89,4 +89,5 @@ a{
    text-align: center;
    border:0;
 }
+
 </style>
