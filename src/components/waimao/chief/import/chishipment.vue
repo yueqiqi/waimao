@@ -80,18 +80,27 @@
 <div v-show="files==true?false:true">
   <div class="time" style="margin-bottom:28px;margin-top:30px;">验货报告</div>
   <ul class="el-upload-list el-upload-list--text" v-for="(item,i) in fileList2" :key="i">
-    <li tabindex="0" class=" d-flex">
+    <li tabindex="0" class=" d-flex" style="margin-top:10px;">
       <div style="color:rgba(6,102,164,1);margin-right:49px;">第{{item.num}}次验货报告</div>
       <router-link to="#" class="el-upload-list__item-name">
         <i class="el-icon-document">{{item.name}}</i>
       </router-link>
-      <div class="d-flex" style="color:#333333">
-        <div>审核人：</div>
-        <div>{{item.user}}</div>
-        <div>{{item.time}}/</div>
-        <div>{{item.user2}}</div>
-        <div>{{item.time2}}</div>
+
+      <div class="d-flex" style="color:#333333;font-size:16px;" v-show="item.title==''||item.time==''?false:true">
+        <div style="font-size:16px;">审核结果：</div>
+        <div style="color:#FF6600">{{item.title}}&nbsp;&nbsp;</div>
+        <div>{{item.time}}</div>
       </div>
+      <!-- 审核结果 -->
+      <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
+      <div style="height:34px;" v-show="item.title==''||item.time==''?true:false">
+        <div class="d-flex" style="color:#333333;">
+          <div style="font-size:16px;">审核结果：</div>
+          <div style="margin-top:-5px;"><input style="background:#EDEDED;width:210px;height:28px;border-radius:10px;border:0;padding-left:19px;" placeholder="请填写审核结果" type="text" v-model="item.input"></div>
+          <div style="margin-top:-5px;margin-left:18px;"><button style="border:0;background:#FF6600;color:#fff;width:100px;height:30px;border-radius:10px;text-align:center;" @click="inputsub(i)">确认提交</button></div>
+        </div>
+      </div>
+      <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
     </li>
   </ul>
 </div>
@@ -161,11 +170,10 @@ return {
       // 文件名字
       name:"王麻子验货报告.pdf",
       // 审核人
-      user:"韩美娟",
+      title:"",
       // 时间
-      time:"2019-7-22",
-      user2:"李总",
-      time2:"2019-7-22"
+      time:"",
+      input:""
     },
     {
       // 第几次验货
@@ -173,11 +181,10 @@ return {
       // 文件名字
       name:"王麻子验货报告.pdf",
       // 审核人
-      user:"韩美娟",
+      title:"报告核验无误",
       // 时间
       time:"2019-7-22",
-      user2:"李总",
-      time2:"2019-7-22"
+      input:""
     },
     {
       // 第几次验货
@@ -185,12 +192,11 @@ return {
       // 文件名字
       name:"王麻子验货报告.pdf",
       // 审核人
-      user:"韩美娟",
+      title:"",
       // 时间
-      time:"2019-7-22",
-      user2:"李总",
-      time2:"2019-7-22"
-    }
+      time:"",
+      input:"",
+    },
   ],
   // 上传文件
     // 上传文件地址
@@ -288,6 +294,11 @@ computed: {
 watch: {},
 //方法集合
 methods: {
+  // 审核提交
+  inputsub(i){
+    console.log("审核提交"+i)
+      console.log(this.fileList2[i].input)
+  },
   // 
   unload2(){
     console.log("导出表格")
