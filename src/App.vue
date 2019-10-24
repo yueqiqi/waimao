@@ -2,7 +2,7 @@
  <div id="app" class="app-container">
     <app-header></app-header>
     <!-- 引入身子文件 -->
-    <router-view style="z-index:999"></router-view>
+    <router-view v-if="isRouterAlive" style="z-index:999"></router-view>
     <!-- 引入侧边栏 -->
     <!-- <app-footer class="leftss"></app-footer> -->
  </div>
@@ -18,7 +18,27 @@ export default {
    components:{
       AppHeader,
       AppFooter
-      }
+      },
+   // 刷新页面
+  provide() { // 注册一个方法
+    return {
+      reload: this.reload
+    }
+  },
+  data() {
+    return {
+      isRouterAlive: true
+    }
+  },
+  methods: {
+    reload() {
+      this.isRouterAlive = false
+      this.$nextTick(function() {
+        this.isRouterAlive = true
+        console.log('reload')
+      })
+    }
+  }
 //       // 注册脚部
 //       AppFooter
 //    }
@@ -89,5 +109,13 @@ a{
    text-align: center;
    border:0;
 }
-
+.headline{
+   font-size:24px;
+font-family:Microsoft YaHei;
+font-weight:bold;
+color:rgba(51,51,51,1);
+}
+.el-form-item__label{
+   font-size:16px
+}
 </style>

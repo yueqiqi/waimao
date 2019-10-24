@@ -1,4 +1,4 @@
-<!--  -->
+<!-- 订单准入 -->
 <template>
 <div class=''>
       <div class="orderin">订单准入</div>
@@ -42,17 +42,17 @@
         <div v-show="cont2" style="margin-top:41px;">
           <div style="color:#333;font-weight:bold;font-size:20px;margin-bottom:20px;">联系方式</div>
           <div>
-            <ul class="u1 d-flex">
+            <ul class="us d-flex">
               <li style="margin-left:-40px;">微信</li>
-              <li>油箱</li>
+              <li>邮箱</li>
               <li>Whatapp</li>
               <li>Facebook</li>
             </ul>
               <ul class="u2 d-flex" >
                 <li style="margin-left:-40px;">{{wx}}</li>
-                <li style="width:172px;">{{email}}</li>
-                <li style="margin-right:40px;">{{wa}}</li>
-                <li >{{facebook}}</li>
+                <li style="width:172px;margin-left:-50px">{{email}}</li>
+                <li style="margin-right:40px;margin-left:100px;">{{wa}}</li>
+                <li style="margin-left:10px;">{{facebook}}</li>
               </ul>
           </div>
           <div style="width:1490px;height:2px;background:#CCC;"></div>
@@ -203,7 +203,7 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-
+import buss from '../bus.js'
 export default {
 //import引入的组件需要注入到对象中才能使用
 components: {
@@ -449,6 +449,10 @@ line-height:27px;
   list-style: none;
   /* float:left; */
   margin-right:139px;
+}
+.us li{
+  list-style: none;
+  width:255px;
 }
 .u2{
 padding-top:0px!important;

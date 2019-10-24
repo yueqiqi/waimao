@@ -3,7 +3,7 @@
 <div class='order'>
   <div class="shaixuan d-flex">
     <div class="img"><img class="icon" src="../../../assets/waimao/icon/saixuan.png" alt=""></div>
-    <div class="title">新增订单</div>
+    <div class="title">筛选查询</div>
     <!-- 输入搜索 -->
     <div class="d-flex" style="height:36px;margin:auto 0;">
       <div class="search">输入搜索</div>

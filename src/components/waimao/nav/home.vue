@@ -69,7 +69,6 @@
         <el-menu-item index="/demo2">总经理</el-menu-item>
       </el-menu-item-group>
       </el-submenu>
-
       <!--  -->
     </el-menu>
 </div>
@@ -163,7 +162,7 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 .leftnav{
   /* border:1 solid red; */
   margin-top:1px;
-  height:1029px;
+  height:1100px;
   width:230px!important;
   /* text-align: center */
   background:#fff;

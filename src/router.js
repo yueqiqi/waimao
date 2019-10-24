@@ -9,6 +9,9 @@ import HelloContainer from "./components/HelloWorld.vue"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 import demo from "./components/waimao/demo.vue"
 import demo2 from "./components/waimao/demo2.vue"
+// 步骤条
+import steps from "./components/waimao/steps.vue"
+
 // 经理端头部
 import head from "./components/waimao/head.vue"
 // 登录
@@ -47,6 +50,57 @@ import rate from './components/waimao/orderlist/rate'  // 缴税退税
 import closing from './components/waimao/orderlist/closing'  // 缴税退税
 
 
+// *************************************************************************************************************************************************************************
+// 平台客户列表
+import client from './components/waimao/pingtai/client'  // 客户列表
+import root from './components/waimao/pingtai/root'  // 权限设置
+import emp from './components/waimao/pingtai/emp'  // 员工列表
+import addemp from './components/waimao/pingtai/addemp'  // 添加员工
+import lookuser from './components/waimao/pingtai/lookuser'  // 查看客户
+
+// *************************************************************************************************************************************************************************
+
+// *************************************************************************************************************************************************************************
+// 用户端
+import usteps from './components/waimao/user/usteps'  // 用户步骤条
+import uindex from './components/waimao/user/uindex'  // 用户端首页
+import uself from './components/waimao/user/uself'  // 个人信息
+import uservice from './components/waimao/user/uservice'  // 客服列表
+import uorders from './components/waimao/user/uorders'  // 订单列表
+import usell from './components/waimao/user/usell'  // 委托销售
+import upurchase from './components/waimao/user/upurchase'  // 委托采购
+import usign from './components/waimao/user/usign'  // 合同签订
+import upayment from './components/waimao/user/upayment'  // 付款开证收款
+import ucarriage from './components/waimao/user/ucarriage'  // 运输清关
+import urate from './components/waimao/user/urate'  // 缴税退税
+import utake from './components/waimao/user/utake'  // 收货
+import uclosing from './components/waimao/user/uclosing'  // 结算汇总
+// /////////////////////////////////////
+import ustpes2 from './components/waimao/user/user2/ustpes2.vue'  // 第二个步骤条
+import upayee from './components/waimao/user/user2/upayee.vue'  // 验货出货
+import utakemoney from './components/waimao/user/user2/utakemoney.vue'  // 验货出货
+import utax2 from './components/waimao/user/user2/utax2.vue'  // 验货出货
+
+// *************************************************************************************************************************************************************************
+// 总监端
+import cindex from './components/waimao/chief/cindex.vue'  // 主页
+import chclient from './components/waimao/chief/chclient.vue'  // 客户列表
+import chroot from './components/waimao/chief/chroot'  // 权限设置
+import chuser from './components/waimao/chief/chuser'  // 客户列表
+import chorders from './components/waimao/chief/chorders'  // 订单列表
+import chorderImport from './components/waimao/chief/chorderImport'  // 订单进出口
+// 》》》》》》》》》》》》》》》
+// 进口
+import chistep from './components/waimao/chief/import/chistep'  // 订单准入
+import chorderEntry from './components/waimao/chief/import/chorderEntry'  // 订单准入
+import chicontract from './components/waimao/chief/import/chicontract'  // 合同签订
+// 》》》》》》》》》》》》》》》
+// 出口
+import chestep from './components/waimao/chief/exit/chestep'  // 步骤条
+import cheorderEntry from './components/waimao/chief/exit/cheorderEntry'  // 订单准入
+import checontract from './components/waimao/chief/exit/checontract'  // 合同签订
+
+// *************************************************************************************************************************************************************************
 // ////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Vue.use(Router)
@@ -56,6 +110,8 @@ export default new Router({
     // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     {path:'/demo',component:demo},
     {path:'/demo2',component:demo2},
+    // 步骤条
+    {path:'/steps',component:steps},
     // 经理端头部
     {path:'/head',component:head},
     // 登录页面
@@ -84,7 +140,85 @@ export default new Router({
   // 主页
   path: '/',
   component: Home,
-  children: [{
+  children: [
+    // 总监端
+    // 总监端主页
+    {
+      path: '/cindex',
+      component: cindex,
+      hidden: true
+    },
+    // 客户列表
+    {
+      path: '/chclient',
+      component: chclient,
+      hidden: true
+    },
+     // 权限设置跳转
+     {
+      path: '/chroot',
+     // 一定要写name,params必须用name来识别路径
+      name: 'chroots',
+      component: chroot
+    },
+    // 客户列表
+    {
+      path: '/chuser',
+     component: chuser,
+     hidden: true
+    },
+    // 订单列表
+    {
+      path: '/chordersr',
+     component: chorders,
+     hidden: true
+    },
+    // 订单进出口
+    {
+      path: '/chorderImport',
+     component: chorderImport,
+     hidden: true
+    },
+    // 订单准入-进口
+    {
+      path: '/chistep',
+      component: chistep,
+      hidden: true
+    },
+    {
+      path: '/chorderEntry',
+      component: chorderEntry,
+      hidden: true
+    },
+    // 合同签订-进口
+    {
+      path: '/chicontract',
+      component: chicontract,
+      hidden: true
+    },
+    // 》》》》》》》》》》》》》》》》》
+    {
+      path: '/chestep',
+      component: chestep,
+      hidden: true
+    },
+    // 订单准入-出口
+    {
+      path: '/cheorderEntry',
+      component: cheorderEntry,
+      hidden: true
+    },
+    // 合同签订-出口
+    {
+      path: '/checontract',
+      component: checontract,
+      hidden: true
+    },
+    
+
+
+    // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  {
     path: '/data',
     component: data,
     hidden: true
@@ -160,6 +294,139 @@ export default new Router({
        component: closing,
        hidden: true
     },
+    // ***************************************************************************************************************************************************//
+    // 平台客户列表
+    {
+      path: '/client',
+       component: client,
+       hidden: true
+    },
+    // 权限设置跳转
+    {
+      path: '/root',
+     // 一定要写name,params必须用name来识别路径
+      name: 'roots',
+      component: root
+    },
+    // 员工列表
+    {
+      path: '/emp',
+       component: emp,
+       hidden: true
+    },
+    // 添加新员工
+    {
+      path: '/addemp',
+       component: addemp,
+       hidden: true
+    },
+    // 查看客户
+    {
+      path: '/lookuser',
+       component: lookuser,
+       hidden: true
+    },
+    // ***************************************************************************************************************************************************//
+
+    // ***************************************************************************************************************************************************//
+    // 用户端
+    // 步骤条
+    {
+      path: '/usteps',
+       component: usteps,
+       hidden: true
+    },
+    {
+      path: '/uindex',
+       component: uindex,
+       hidden: true
+    },
+    // 个人信息
+    {
+      path: '/uself',
+       component: uself,
+       hidden: true
+    },
+    // 客服列表
+    {
+      path: '/uservice',
+       component: uservice,
+       hidden: true
+    },
+    // 订单列表
+    {
+      path: '/uorders',
+       component: uorders,
+       hidden: true
+    },
+    // 委托销售
+    {
+      path: '/usell',
+       component: usell,
+       hidden: true
+    },
+    // 委托采购
+    {
+      path: '/upurchase',
+       component: upurchase,
+       hidden: true
+    },
+    // 合同签订
+    {
+      path: '/usign',
+       component: usign,
+       hidden: true
+    },
+    // 付款开证收款
+    {
+      path: '/upayment',
+       component: upayment,
+       hidden: true
+    },
+    // 运输清关
+    {
+      path: '/ucarriage',
+       component: ucarriage,
+       hidden: true
+    },
+    // 缴税退税
+    {
+      path: '/urate',
+       component: urate,
+       hidden: true
+    },
+    // 收货
+    {
+      path: '/utake',
+       component: utake,
+       hidden: true
+    },
+    // 结算汇总
+    {
+      path: '/uclosing',
+       component: uclosing,
+       hidden: true
+    },
+    // ??????????????????????????????
+     // 第二个步骤条
+     {
+      path: '/ustpes2',
+       component: ustpes2,
+       hidden: true
+    },
+    // 验货出货
+    {
+      path: '/upayee',
+       component: upayee,
+       hidden: true
+    },
+    // 收款付款
+    {
+      path: '/upayee',
+       component: upayee,
+       hidden: true
+    },
+    // ***************************************************************************************************************************************************//
     
 ]
  },
