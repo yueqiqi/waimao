@@ -413,7 +413,7 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 }
 .img{
   width:31px;height: 31px;margin:auto 0;
-  margin-left:16px;
+  margin-left:10px;
 }
 .title{
   font-size:24px;

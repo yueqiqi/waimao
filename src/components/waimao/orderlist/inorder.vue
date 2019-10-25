@@ -343,7 +343,10 @@ methods: {
   // 订单回收跳转
   dellink(){
     this.$router.push({
-      path:"/"
+      path:"/rec",
+      query:{
+        type:"进口订单",
+      }
     })
   },
    // 888888888888888888888888888888888888888888888888888888888888
@@ -418,9 +421,9 @@ console.log("这是第"+this.cur+"页")
     //   }
     // )
     this.$router.push({
-      path:'/adduser',
+      path:'/addorder',
       query:{
-        id:1
+        type:"进口订单"
       }
     })
   },

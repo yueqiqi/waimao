@@ -21,7 +21,7 @@
         <td style="width:160px;">销售金额</td>
         <td style="width:100px;">汇率</td>
         <td style="width:160px;">退税金额</td>
-        <td style="width:100px;">港口服务费</td>
+        <td style="width:100px;">运费</td>
         <td style="width:157px;">其他费用<span style="font-size:
 12px;color:#999999">(银行费用等)</span></td>
         <td style="width:120px;">毛利润</td>
@@ -75,13 +75,39 @@
             <button class="sub" @click="sub2">提交</button>
           </td>
         </tr>
-        <tr>
+         <tr>
           <td>资金成本</td>
           <td>
              <el-input  :disabled="dis2==true?true:false" @change="other" type="number" v-model="consts2"></el-input>
           </td>
           <td>
              <el-input  :disabled="dis2==true?true:false" @change="other" type="text" v-model="remark2"></el-input>
+          </td>
+          <td>
+            <button class="set" @click="set3">编辑</button>
+            <button class="sub" @click="sub3">提交</button>
+          </td>
+        </tr>
+         <tr>
+          <td>退税手续费</td>
+          <td>
+             <el-input  :disabled="dis2==true?true:false" @change="other" type="number" v-model="back"></el-input>
+          </td>
+          <td>
+             <el-input  :disabled="dis2==true?true:false" @change="other" type="text" v-model="backinput"></el-input>
+          </td>
+          <td>
+            <button class="set" @click="set3">编辑</button>
+            <button class="sub" @click="sub3">提交</button>
+          </td>
+        </tr>
+        <tr>
+          <td>中信保保费</td>
+          <td>
+             <el-input  :disabled="dis2==true?true:false" @change="other" type="number" v-model="zxb"></el-input>
+          </td>
+          <td>
+             <el-input  :disabled="dis2==true?true:false" @change="other" type="text" v-model="zxbinput"></el-input>
           </td>
           <td>
             <button class="set" @click="set3">编辑</button>
@@ -135,6 +161,14 @@ return {
   // 其他费用
   all:"0",
   dis2:true,
+// 退税手续费
+// 备注
+backinput:"",
+back:"",
+  // 中信保保费
+  // 备注
+  zxbinput:"",
+  zxb:"",
   remark3:"",
   //其他费用 
   consts3:"0",

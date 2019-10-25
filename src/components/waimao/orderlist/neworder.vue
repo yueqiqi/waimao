@@ -15,7 +15,9 @@
     <div class="steps">
        <div style="height:70px;width:100%;display:flex;padding-bottom:30px;">
       <div class="d-flex" style="height:32px;align-self:center">
-        <div :class="add1==true?active:'boxzxc'"  @click="add">新增订单</div>
+        <router-link to="/addorder?type='出口'">
+          <div :class="add1==true?active:'boxzxc'"  @click="add">新增订单</div>
+        </router-link>
         <div class="line"></div>
         <div :style="add1==false?'pointer-events:none':''" :class="[ins1==true?active:(m2=='normal'?'normal':'boxzxc')]" @click="ins">订单准入</div>
         <div class="line"></div>

@@ -18,7 +18,7 @@
         </template>
       <el-menu-item-group>
         <template slot="title"></template>
-        <el-menu-item index="/data">数据统计</el-menu-item>
+        <el-menu-item :index="user==0?'/data':'/demo'">{{user==0?'首页':'瓷业'}}</el-menu-item>
       </el-menu-item-group>
       </el-submenu>
       <!-- 客户列表 -->
@@ -94,6 +94,8 @@ components: {},
 data() {
   //这里存放数据
 return {
+  // 判断登陆者信息
+  user:0,
   act:false,
   act2:false,
   act3:false,

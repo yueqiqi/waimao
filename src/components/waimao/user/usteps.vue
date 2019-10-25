@@ -26,7 +26,7 @@
       <!--  -->
       <div>
         <div class="d-flex"> 
-          <div :style="ht1==false?'pointer-events:none':''" :class="fk1==true?active:(m4=='normal'?'normal':'boxzxc')" @click="fk">付款开证收款</div>
+          <div :style="ht1==false?'pointer-events:none':''" :class="fk1==true?active:(m4=='normal'?'normal':'boxzxc')" @click="fk">付款开证</div>
             <div class="line"></div>  
           <div :style="ys1==false?'pointer-events:none':''" :class="ts1==true?active:(m5=='normal'?'normal':'boxzxc')" @click="ts">缴税退税</div>
         </div>

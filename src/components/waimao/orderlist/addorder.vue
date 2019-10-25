@@ -1,4 +1,4 @@
-<!-- 添加新客户 -->
+<!-- 添加新订单 -->
 <template>
 <div class='add'>
    <!-- 顶部导航条 -->
@@ -9,8 +9,8 @@
   </div>
   <!-- 填写客户信息 -->
   <!-- <div class="fill"> -->
-    <el-tabs type="border-card">
-  <el-tab-pane>
+    <el-tabs type="border-card" v-model="activeName">
+  <el-tab-pane name="内贸合同信息">
     <span slot="label"><div class="fillTitle">内贸合同信息</div></span>
     <div style="height:100%;">
 
@@ -120,7 +120,7 @@
      <el-form-item style="margin-left:48px;" label="商品总金额">
        <el-input  type="text" placeholder="请填写商品总金额" v-model="form2.money"></el-input>
      </el-form-item>
-    <button class="detailbtn" @click="detailbtn">确认添加</button>
+    <button class="detailbtn" @click="detailbtn">确定添加</button>
     </div>
     </el-form>
   </div>
@@ -170,7 +170,7 @@
   <!-- -------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
   <!-- -------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
   <!-- -------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
- <el-tab-pane>
+ <el-tab-pane name="外贸合同信息">
    <span slot="label"><div class="fillTitle">外贸合同信息</div></span>
    <div style="height:100%;">
 
@@ -280,7 +280,7 @@
      <el-form-item style="margin-left:48px;" label="商品总金额">
        <el-input  type="text" placeholder="请填写商品总金额" v-model="form4.money"></el-input>
      </el-form-item>
-    <button class="detailbtn" @click="detailbtn2">确认添加</button>
+    <button class="detailbtn" @click="detailbtn2">确定添加</button>
     </div>
     </el-form>
   </div>
@@ -346,6 +346,7 @@ components: {},
 data() {
   //这里存放数据
 return {
+  activeName:"内贸合同信息",
 table2:[
     {
       title:"什么什么石油",
@@ -506,6 +507,12 @@ methods: {
     this.table2.push(newtable)
     e.preventDefault()
     console.log("商品信息提交按钮")
+    this.$router.push({
+      path:"/",
+      query:{
+        type:"外贸合同信息"
+      }
+    })
   },
   // ra
   // radio(){
@@ -516,12 +523,12 @@ methods: {
 submit2(){
   console.log(this.form)
   console.log("省份："+this.province,"城市："+this.city,"地区："+this.area)
-  var form=JSON.stdingify(this.form)
+  // var form=JSON.stdingify(this.form)
   setTimeout(()=>{
     this.$router.push({
-         path:'/chinauser',
+         path:'/neworder',
          query:{
-           form,
+          //  form,
          }
        })
   },1000)
@@ -552,6 +559,12 @@ submit2(){
     this.table.push(newtable)
     e.preventDefault()
     console.log("商品信息提交按钮")
+    this.$router.push({
+      path:"/",
+      query:{
+        type:"内贸合同信息"
+      }
+    })
   },
   // ra
   // radio(){
@@ -562,12 +575,12 @@ submit2(){
 submit(){
   console.log(this.form)
   console.log("省份："+this.province,"城市："+this.city,"地区："+this.area)
-  var form=JSON.stdingify(this.form)
+  // var form=JSON.stdingify(this.form)
   setTimeout(()=>{
     this.$router.push({
-         path:'/chinauser',
+         path:'/mainsteps',
          query:{
-           form,
+          //  form,
          }
        })
   },1000)
@@ -584,9 +597,13 @@ mounted() {
 beforeCreate() {}, //生命周期 - 创建之前
 beforeMount() {}, //生命周期 - 挂载之前
 beforeUpdate() {}, //生命周期 - 更新之前
-updated() {}, //生命周期 - 更新之后
+updated() {
+  
+}, //生命周期 - 更新之后
 beforeDestdoy() {}, //生命周期 - 销毁之前
-destdoyed() {}, //生命周期 - 销毁完成
+destdoyed() {
+  console.log(this.activeName)
+}, //生命周期 - 销毁完成
 activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 }
 </script>

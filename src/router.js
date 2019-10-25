@@ -48,6 +48,7 @@ import receiving from './components/waimao/orderlist/receiving'  // 收款付款
 import carriage from './components/waimao/orderlist/carriage'  // 报关运输
 import rate from './components/waimao/orderlist/rate'  // 缴税退税
 import closing from './components/waimao/orderlist/closing'  // 缴税退税
+import mainsteps from './components/waimao/orderlist/import/mainsteps'  // 进口步骤条
 
 
 // *************************************************************************************************************************************************************************
@@ -237,16 +238,25 @@ export default new Router({
      component: lists,
      hidden: true
    },
+  //  订单回收
   {
     path: '/rec',
      component: rec,
      hidden: true
   },
+  // 添加新订单
   {
     path: '/addorder',
      component: addorder,
      hidden: true
   },
+  // 步骤太
+  {
+    path: '/mainsteps',
+     component: mainsteps,
+     hidden: true
+  },
+  
   {
     path: '/neworder',
     component: neworder,

@@ -7,7 +7,13 @@
       <div>{{time}}<span style="margin-left:10px;">{{seconed}}</span></div>
   </div>
   <!-- 商品信息 -->
+ <div style="display:flex;justify-content:space-between;margin-right:113px;margin-top:30px;">
   <div class="rtitle">商品信息</div>
+  <div class="d-flex">
+  <button @click="load2" style="border-top-right-radius:0;border-bottom-right-radius:0;" class="load d-flex"><div style="margin-left:7px;">导入表格</div><div><img style="width:12px;height:13px;margin-top:9px;margin-left:4px;" src="../../../assets/waimao/icon/load.png" alt=""></div></button>
+  <button @click="unload2" style="margin-left:1px;border-bottom-left-radius:0;border-top-left-radius: 0;" class="load d-flex"><div style="margin-left:7px;">导出表格</div><div><img style="width:12px;height:13px;margin-top:9px;margin-left:4px;" src="../../../assets/waimao/icon/load.png" alt=""></div></button>
+  </div>
+  </div>
   <div>
     <table>
       <thead>
@@ -117,6 +123,13 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
+  load2(){
+    console.log("导入按钮")
+  },
+  // 导出按钮
+  unload2(){
+    console.log("导出按钮")
+  },
   // 发票
   invoice(event){
     // console.log("值"+event)
@@ -189,7 +202,6 @@ margin-top:30px;
 font-family:Microsoft YaHei;
 font-weight:bold;
 color:rgba(51,51,51,1);
-margin-top:32px;
 margin-bottom:16px;
 }
 table>thead td{
@@ -264,5 +276,20 @@ font-weight:bold;
 color:rgba(6,102,164,1);
 margin-left:20px;
 margin-top:1px;
+}
+.load{
+   width:100px;
+height:30px;
+background:rgba(154,195,220,1);
+border-radius:10px;
+text-align: center;
+line-height: 30px;
+font-size:14px;
+font-family:Microsoft YaHei;
+font-weight:400;
+color:rgba(255,255,255,1);
+border:0;
+/* margin:auto 0;
+margin-top:40px; */
 }
 </style>
