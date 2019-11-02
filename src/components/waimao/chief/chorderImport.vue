@@ -479,7 +479,7 @@ console.log("这是第"+this.cur+"页")
     console.log(i)
     var userName=this.lists[i].uname
     this.$router.push({
-      path:'/setuser',
+      path:'/mainsteps',
       query:{
         userName,
         id:1,

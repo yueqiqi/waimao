@@ -51,10 +51,10 @@ return {
       role:"业务经理",
     },
     {
-      role:"业务经理",
+      role:'销售总监',
     },
     {
-      role:"业务经理",
+      role:"总经理",
     }
   ]
 };
@@ -76,9 +76,10 @@ methods: {
     this.$router.push({
       name:"chroots",
       params:{
-        id:i
+        id:this.details[i].role
       }
     })
+    // this.$router.push({id:this.detail.i})
   }
 },
 //生命周期 - 创建完成（可以访问当前this实例）

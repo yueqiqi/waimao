@@ -90,6 +90,7 @@ import chroot from './components/waimao/chief/chroot'  // 权限设置
 import chuser from './components/waimao/chief/chuser'  // 客户列表
 import chorders from './components/waimao/chief/chorders'  // 订单列表
 import chorderImport from './components/waimao/chief/chorderImport'  // 订单进出口
+import sfout from './components/waimao/chief/sfout'  // 订单进出口
 // 》》》》》》》》》》》》》》》
 // 进口
 import chistep from './components/waimao/chief/import/chistep'  // 订单准入
@@ -170,7 +171,7 @@ export default new Router({
     },
     // 订单列表
     {
-      path: '/chordersr',
+      path: '/chorders',
      component: chorders,
      hidden: true
     },
@@ -178,6 +179,11 @@ export default new Router({
     {
       path: '/chorderImport',
      component: chorderImport,
+     hidden: true
+    },
+    {
+      path: '/sfout',
+     component: sfout,
      hidden: true
     },
     // 订单准入-进口

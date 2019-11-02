@@ -98,12 +98,16 @@ methods: {
 //生命周期 - 创建完成（可以访问当前this实例）
 created() {
   console.log("获取传递的参数",this.$route.params)
+  this.role=this.$route.params.id
 },
 //生命周期 - 挂载完成（可以访问DOM元素）
 mounted() {
 
 },
-beforeCreate() {}, //生命周期 - 创建之前
+beforeCreate() {
+  // var id=this.$route.id
+  // console.log(id)
+}, //生命周期 - 创建之前
 beforeMount() {}, //生命周期 - 挂载之前
 beforeUpdate() {}, //生命周期 - 更新之前
 updated() {}, //生命周期 - 更新之后

@@ -18,7 +18,10 @@
         </template>
       <el-menu-item-group>
         <template slot="title"></template>
-        <el-menu-item :index="user==0?'/data':'/demo'">{{user==0?'首页':'瓷业'}}</el-menu-item>
+        <!-- <el-menu-item :index="user==0?'/data':'/demo'">{{user==0?'首页':'瓷业'}}</el-menu-item> -->
+        <el-menu-item :index="user==0?'/cindex':'/demo'">{{user==0?'数据统计':'瓷业'}}</el-menu-item>
+        <el-menu-item :index="user==0?'/chclient':'/demo'">{{user==0?'角色管理':'瓷业'}}</el-menu-item>
+        <el-menu-item :index="user==0?'/chroot':'/demo'">{{user==0?'权限管理':'瓷业'}}</el-menu-item>
       </el-menu-item-group>
       </el-submenu>
       <!-- 客户列表 -->
@@ -31,9 +34,9 @@
         </template>
       <el-menu-item-group>
         <template slot="title"></template>
-        <el-menu-item index="/chinaUser">中方客户</el-menu-item>
+        <el-menu-item index="/chuser">中方客户</el-menu-item>
         <div class="border"></div>
-        <el-menu-item index="/demo2">外方客户</el-menu-item>
+        <el-menu-item index="/chuser">外方客户</el-menu-item>
       </el-menu-item-group>
       </el-submenu>
       <!-- 订单列表 -->
@@ -45,15 +48,16 @@
           </div>
         </template>
       <el-menu-item-group>
-        <template slot="title"></template>
-        <el-menu-item index="/demo2">委托订单</el-menu-item>
+        <template slot="title"></template>  
+        <!-- <el-menu-item index="/chorders">订单列表</el-menu-item> -->
+        <el-menu-item index="/chorders">委托订单</el-menu-item>
         <div class="border"></div>
-        <el-menu-item index="/out">出口订单</el-menu-item>
+        <el-menu-item index="/sfout">出口订单</el-menu-item>
         <div class="border"></div>
-        <el-menu-item index="/inorder">进口订单</el-menu-item>
+        <el-menu-item index="/chorderImport">进口订单</el-menu-item>
       </el-menu-item-group>
       </el-submenu>
-      <el-submenu index="4">
+      <!-- <el-submenu index="4">
         <template slot="title">
           <div v-bind:class="{active:act4}">
           <i class="icon"><img src="@/assets/waimao/index/emp.png" alt=""></i>
@@ -68,7 +72,7 @@
         <div class="border"></div>
         <el-menu-item index="/demo2">总经理</el-menu-item>
       </el-menu-item-group>
-      </el-submenu>
+      </el-submenu> -->
       <!--  -->
     </el-menu>
 </div>

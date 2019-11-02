@@ -154,6 +154,9 @@
   <div  v-show="tc">
     <alert></alert>
   </div>
+  <div v-show='sh'>
+    <alert2></alert2>
+  </div>
   <!--  -->
 </div>
 </template>
@@ -163,10 +166,12 @@
 //例如：import 《组件名称》 from '《组件路径》';
 import buss from './bus.js'
 import alert from './alert'
+import alert2 from './alert2'
 export default {
 //import引入的组件需要注入到对象中才能使用
 components: {
-  alert
+  alert,
+  alert2
 },
 data() {
 //这里存放数据
@@ -174,6 +179,7 @@ return {
 
    // 明细弹窗
   tc:false,
+  sh:false,
   // delusers:[],
   // 业务选择
   type:"全部业务",
@@ -216,7 +222,7 @@ return {
     // 第一个用户
     {
       id:"01222",
-      type:"进口业务",
+      type:"出口业务",
       uname:"仰光强大",
       peo:"张三",
       phone:13500000000,
@@ -489,6 +495,14 @@ console.log("这是第"+this.cur+"页")
   look(i){
     console.log(this.lists[i])
     console.log(i)
+    var userName=this.lists[i].uname
+    this.$router.push({
+      path:'/setuser',
+      query:{
+        userName,
+        id:1,
+      }
+    })
   },
   // 编辑
   set(i){
@@ -506,14 +520,17 @@ console.log("这是第"+this.cur+"页")
     //   address:"西安",
     //   jointime:"2019-05-20",
     //   })
-    var userName=this.lists[i].uname
-    this.$router.push({
-      path:'/setuser',
-      query:{
-        userName,
-        id:1,
-      }
-    })
+    // var userName=this.lists[i].uname
+    // this.$router.push({
+    //   path:'/setuser',
+    //   query:{
+    //     userName,
+    //     id:1,
+    //   }
+    // })
+    buss.$emit("gb",i)   //$emit这个方法会触发一个事件
+    this.stop()
+    this.tc=true
   },
   // 回收
    // 禁止滚动

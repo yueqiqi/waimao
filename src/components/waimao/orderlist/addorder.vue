@@ -87,7 +87,7 @@
 
     <!-- ----------------------------------------------------- -->
     <!-- 商品信息 -->
-    <el-form ref="form" class="detail" :model="form2" label-position="left" label-width="82px">
+    <el-form ref="form" @submit.prevent class="detail" :model="form2" label-position="left" label-width="82px">
       <div style="margin-top:10px;margin-bottom:19px;font-size:20px;color:#333;font-weight:blod">商品信息</div>
     <div class="d-flex">
       <!-- 商品名称 -->
@@ -120,7 +120,7 @@
      <el-form-item style="margin-left:48px;" label="商品总金额">
        <el-input  type="text" placeholder="请填写商品总金额" v-model="form2.money"></el-input>
      </el-form-item>
-    <button class="detailbtn" @click="detailbtn">确定添加</button>
+    <button class="detailbtn" type="button" @click="detailbtn">确定添加</button>
     </div>
     </el-form>
   </div>
@@ -503,16 +503,27 @@ methods: {
   },
   // 商品信息添加按钮
   detailbtn2(e){
+    console.log('阻止默认行为',e)
+    e.preventDefault()
     var newtable=this.form4
     this.table2.push(newtable)
     e.preventDefault()
     console.log("商品信息提交按钮")
-    this.$router.push({
-      path:"/",
-      query:{
-        type:"外贸合同信息"
-      }
-    })
+    // this.$router.push({
+    //   path:"/data",
+    //   query:{
+    //     type:"外贸合同信息"
+    //   }
+    // })
+    // var title=this.form2.title
+    // var type=this.form2.title
+    // var num=this.form2.title
+    // var unit=this.form2.title
+    // var hb=this.form2.title
+    // var price=this.form2.title
+    // var money=this.form2.title
+    // // function creaatePerson
+    // this.table.push({title,type,num,unit,hb,price,money})
   },
   // ra
   // radio(){
@@ -555,16 +566,18 @@ submit2(){
   },
   // 商品信息添加按钮
   detailbtn(e){
+    e.preventDefault()
+    console.log('确定添加',e)
     var newtable=this.form2
     this.table.push(newtable)
     e.preventDefault()
     console.log("商品信息提交按钮")
-    this.$router.push({
-      path:"/",
-      query:{
-        type:"内贸合同信息"
-      }
-    })
+    // this.$router.push({
+    //   path:"/",
+    //   query:{
+    //     type:"内贸合同信息"
+    //   }
+    // })
   },
   // ra
   // radio(){

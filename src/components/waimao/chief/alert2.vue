@@ -7,12 +7,12 @@
       <div class="d-spb" style="line-height:32px;height:32px;padding-top:30px;margin-left:30px;margin-right:29px;">
         <div class="d-flex" style="">
           <div style="width:20px;height:20px;margin:auto;"><img style="width:20px;height:20px;" src="../../../assets/waimao/icon/report.png" alt=""></div>
-          <div style="font-size:20px;color:rgba(51,51,51,1);font-weight:bold;margin-left:10px;">确认拒绝通过该审核资料？</div>
+          <div style="font-size:20px;color:rgba(51,51,51,1);font-weight:bold;margin-left:10px;">是否通过该客户的委托申请？</div>
         </div>
         <div><img @click="close" style="width:10px;height:10px;" src="../../../assets/waimao/icon/close.png" alt=""></div>
       </div>
       <div style="width:440px;height:160px;margin:0 auto;margin-top:30px;">
-        <el-input type="textarea" placeholder="请输入内容" v-model="textarea"></el-input>
+        <el-input type="textarea" placeholder="请填写拒绝理由" v-model="textarea"></el-input>
       </div>
       <div style="display:flex;justify-content:flex-end;margin-top:10px;">
       <button class="qr" @click="qr">确认</button>
@@ -43,19 +43,19 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
+  close(){
+    buss.$emit("x",false)
+  },
   qr(){
     var m=this.textarea
     var zz=[m,false]
   buss.$emit("close",zz)
-  // console.log(this.textarea)
+  console.log(this.textarea)
 },
 },
 //生命周期 - 创建完成（可以访问当前this实例）
 created() {
-  close(){
-    buss.$emit("x",false)
-  },
-buss.$on("myFun",(data)=>{   //这里最好用箭头函数，不然this指向有问题
+buss.$on("gb",(data)=>{   //这里最好用箭头函数，不然this指向有问题
                   console.log("这是"+data)  
                   this.data=data   
              })

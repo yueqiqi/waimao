@@ -16,10 +16,10 @@
        <div style="height:70px;width:100%;display:flex;padding-bottom:30px;">
       <div class="d-flex" style="height:32px;align-self:center">
         <router-link to="/addorder?type='出口'">
-          <div :class="add1==true?active:'boxzxc'"  @click="add">新增订单</div>
+          <div class="boxzxc"  @click="add">新增订单</div>
         </router-link>
         <div class="line"></div>
-        <div :style="add1==false?'pointer-events:none':''" :class="[ins1==true?active:(m2=='normal'?'normal':'boxzxc')]" @click="ins">订单准入</div>
+        <div :class="ins1==true?active:'boxzxc'" @click="ins">订单准入</div>
         <div class="line"></div>
         <div :style="ins1==false?'pointer-events:none':''" :class="ht1==true?active:(m3=='normal'?'normal':'boxzxc')" @click="ht">合同签订</div>
         <div class="line" style="margin-right:0"></div>
