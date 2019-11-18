@@ -1,4 +1,4 @@
-<!--  -->
+<!-- 注册 -->
 <template>
 <div class='bg'>
   <div class="img">
@@ -12,6 +12,9 @@
           <el-input placeholder="请输入邮箱" class="email" v-model="reg.email"></el-input>
         </el-form-item>
           <button @click="email" class="btn" :disabled="dis" :style="dis==true?'opacity: 0.65;':''">发送验证信息到邮箱</button>
+        <el-form-item prop="code">
+          <el-input  placeholder="请输入验证码" type="number" v-model="reg.code" autocomplete="off"></el-input>
+        </el-form-item>
         <!-- 填写密码input ------------------------------------------>
         <el-form-item prop="pwd">
           <el-input  placeholder="请输入密码" type="password" v-model="reg.pwd" autocomplete="off"></el-input>
@@ -22,7 +25,7 @@
   <!-- ------------------------------------ -->
       </el-form>
         <!-- 提交表单信息 -->
-          <button @click="confirm" class="btn2">确认修改</button>
+          <button @click="confirm" class="btn2">确认注册</button>
     </div>
     <!-- 提示 -->
     <div class="total" v-show="show">
@@ -41,6 +44,22 @@ export default {
 //import引入的组件需要注入到对象中才能使用
 components: {},
  data() {
+   /**
+    * 验证码验证
+    */
+      var code = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入验证码'));
+        } else if(value.length!=6){
+          callback(new Error('请输入正确的验证码'));
+        }
+        else{
+          if (this.reg.pwd !== '') {
+            this.$refs.reg.validateField('code');
+          }
+          callback();
+        }
+      };
   //  邮箱验证
 var email=(rule,value,callback)=>{
   if(value==""){
@@ -60,6 +79,9 @@ var email=(rule,value,callback)=>{
     callback()
   }
 };
+/**
+ * 输入的第一次密码
+ */
    var validatePass = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请输入密码'));
@@ -73,6 +95,9 @@ var email=(rule,value,callback)=>{
           callback();
         }
       };
+/**
+ * 输入的第二次密码
+ */
       var validatePass2 = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请再次输入密码'));
@@ -91,6 +116,7 @@ var email=(rule,value,callback)=>{
           email:"",
           pwd:"",
           spwd:"",
+          code:'',
         },
         // 错误提示
         rules:{
@@ -102,8 +128,10 @@ var email=(rule,value,callback)=>{
           ],
           email:[
             { validator: email, trigger: 'blur' }
-
-          ]
+          ],
+          code:[
+            { validator:code, trigger: 'blur' }
+          ],          
         },
       };
     },
@@ -120,12 +148,36 @@ methods: {
 //  验证邮箱
 email(){
   this.show=true
+  console.log('验证邮箱验证码')
+  /**
+   * 验证吗获取
+   */
+     this.$http.post('main/auth/getRegCode', {email:'154183233274@163.com'}).then(
+        response => {
+          console.log(response)
+        },
+        err => {
+          console.log(err)
+        }).catch((error) => {
+        console.log(error)
+      })
 },
 //  注册
 confirm(){
   this.$router.push({  //核心语句
         path:'/reg',   //跳转的路径
       })
+    /**
+     * 发送ajax请求
+     */
+    var url='main/auth/register'
+    this.$axios.post('http://192.168.0.184:8002/main/auth/register',{email:'15183233274@163.com',passwd:'123456',code:'9527',role_id:'123'}).then(function(res){
+      console.log('请求成功',res)
+    }).catch(function(err){
+      console.log('请求失败',err)
+    })
+
+
 }
 },
 //生命周期 - 创建完成（可以访问当前this实例）
@@ -160,7 +212,7 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 }
 /* 输入外框 */
 .border{
-  width:495px;height: 500px;
+  width:495px;height: 600px;
   background:rgba(255,255,255,0.4);
   border-radius:20px;
   z-index:10;
