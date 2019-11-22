@@ -152,29 +152,53 @@ email(){
   /**
    * 验证吗获取
    */
-     this.$http.post('main/auth/getRegCode', {email:'154183233274@163.com'}).then(
+     this.$ajax.post('/auth/getRegCode', {email:this.reg.email}).then(
         response => {
-          console.log(response)
+          console.log('发送验证码成功',response)
         },
         err => {
           console.log(err)
         }).catch((error) => {
         console.log(error)
       })
+
 },
 //  注册
 confirm(){
-  this.$router.push({  //核心语句
-        path:'/reg',   //跳转的路径
-      })
+  // this.$router.push({  //核心语句
+  //       path:'/reg',   //跳转的路径
+  //     })
+
+      /**
+       * 用户填写的信息
+       */
+      var params={
+        email:this.reg.email,
+        passwd:this.reg.pwd,
+        // spwd:
+        code:this.reg.code,
+        // role_id:''
+      }
+      console.log('用户填写的信息',params)
     /**
      * 发送ajax请求
      */
-    var url='main/auth/register'
-    this.$axios.post('http://192.168.0.184:8002/main/auth/register',{email:'15183233274@163.com',passwd:'123456',code:'9527',role_id:'123'}).then(function(res){
-      console.log('请求成功',res)
+    var that=this
+    this.$ajax.post('/auth/register',params).then(function(res){
+      console.log('请求祖册成功',res)
+      if(res.data.code==200){
+        that.$router.push({
+          path:'/perfect'
+        })
+          var token=res.data.data
+      
+      }else {
+        alert(res.data.msg)
+      }
     }).catch(function(err){
+
       console.log('请求失败',err)
+
     })
 
 
@@ -290,8 +314,8 @@ font-size:16px;
 font-family:Microsoft YaHei;
 font-weight:400;
 color:rgba(51,51,51,1);
-position: relative;
-top:-450px;left:1279px;
+position: absolute;
+top:70px;left:1279px;
 }
 .total :first-child{
   width:192px;height:41px;

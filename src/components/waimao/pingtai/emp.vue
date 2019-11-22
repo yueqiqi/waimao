@@ -1,4 +1,4 @@
-<!-- 员工列表 -->
+<!-- 员工列表-业务经理 -->
 <template>
 <div class='emp'>
   <!-- 权限管理 -->
@@ -21,7 +21,7 @@
           <!-- 状态选择 -->
           <div class="d-flex">
             <div style="color:#333;font-weight:400;line-height:27px;margin-right:10px;">角色选择</div>
-            <el-select v-model="value" clearable placeholder="请选择" @change="statu">
+            <el-select v-model="value" clearable placeholder="请选择角色" @change="statu">
               <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </div>
@@ -35,7 +35,7 @@
      <table>
        <thead>
          <td style="width:120px;">编号</td>
-         <td style="width:200px;">员工昵称</td>
+         <td style="width:200px;">员工职位</td>
          <td style="width:200px;">员工姓名</td>
          <td style="width:200px;">联系电话</td>
          <td style="width:200px;">负责客户数</td>
@@ -43,12 +43,12 @@
          <td style="width:443px;">操作</td>
        </thead>
        <tbody v-for="(item,i) in details" :key="i">
-         <td>{{item.emp}}</td>
-         <td>{{item.ename}}</td>
+         <td>{{item.id}}</td>
+         <td>{{item.role_id==1?'客户':(item.role_id==2?'业务经理':(item.role_id==3?'总监':(item.role_id==4?'总经理':'未知')))}}</td>
          <td>{{item.name}}</td>
-         <td>{{item.ephone}}</td>
-         <td>{{item.euser}}</td>
-         <td>{{item.eorders}}</td>
+         <td>{{item.mobile}}</td>
+         <td>{{item.user_num}}</td>
+         <td>{{item.order_num}}</td>
          <td>
            <button class="btn look" @click="look(i)">删除</button>
            <button class="btn set" @click="set(i)">编辑</button>
@@ -59,7 +59,7 @@
   </div>
   <!--  -->
    <!-- 分页功能 -->
-    <div class="page-bar">
+    <!-- <div class="page-bar">
       <ul class="ul">
         <li v-if="cur>1"><a v-on:click="cur--,pageClick()">上一页</a></li>
         <li v-if="cur==1"><a class="banclick">上一页</a></li>
@@ -69,15 +69,15 @@
         <li v-if="cur!=allpage"><a v-on:click="cur++,pageClick()">下一页</a></li>
         <li v-if="cur == allpage"><a class="banclick">下一页</a></li>
         <li><a>共<i>{{allpage}}</i>页</a></li>
-        <!-- 输入数字跳转 -->
+     
          <div class="jumpbox">
            <div style="float:left;line-height:34px;color:rgb(51,51,51);font-size:14px;margin-right:10px;">到第</div>
 		      <input type="number" class="jumppage" />
 	      	<a class="jumpbtn" v-on:click="pageSkip()">确定</a>
 	      </div>
-        <!--  -->
+        
       </ul>
-    </div>
+    </div> -->
   <!-- emp -->
 </div>
 </template>
@@ -100,60 +100,27 @@ return {
   // 888888888888888888888888888888888888888888888888
   // 员工列表
   details:[
-    {
-      emp:"01",
-      ename:"王胖子",
-      name:"李胖子",
-      ephone:13500000000,
-      euser:20,
-      eorders:30,
-    },
-    {
-      emp:"02",
-      ename:"王胖子",
-      name:"李胖子",
-      ephone:13500000000,
-      euser:20,
-      eorders:30,
-    },
-    {
-      emp:"03",
-      ename:"王胖子",
-      name:"李胖子",
-      ephone:13500000000,
-      euser:20,
-      eorders:30,
-    }
   ],
   // 选项框
   options: [
-        {
-          value:"全部状态",
-          label:"全部状态"
-        },
-        {
-          value: '订单准入',
-          label: '订单准入'
-        }, {
-          value: '签订合同',
-          label: '签订合同'
-        }, {
-          value: '验货出货',
-          label: '验货出货'
-        }, {
-          value: '收款付款',
-          label: '收款付款'
-        }, {
-          value: '报关运输',
-          label: '报关运输'
-        }, {
-          value: '缴税退税',
-          label: '缴税退税'
-        }, {
-          value: '结算汇总',
-          label: '结算汇总'
-        }],
-        value: '全部状态',
+      {
+        value:'全部角色',
+        lable:-1
+      },
+      {
+        value:'业务经理',
+        lable:2
+      },
+      {
+        value:'销售总监',
+        lable:3
+      },
+      {
+        value:'总经理',
+        lable:4
+      }
+  ],
+        value: '',
 };
 },
 //监听属性 类似于data概念
@@ -192,8 +159,6 @@ methods: {
   // 删除
   look(i){
     console.log(i)
- 
-
      this.$confirm('此操作将永久删除该员工, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -254,9 +219,9 @@ methods: {
     // )
     this.$router.push({
       path:'/addemp',
-      query:{
-        id:1
-      }
+      // query:{
+      //   id:1
+      // }
     })
   },
     // 888888888888888888888888888888888888888888888888888888888888
@@ -321,8 +286,37 @@ console.log("这是第"+this.cur+"页")
     console.log("刷新")
   },
   // 状态选择
+
   statu(opt){
-    console.log(opt)
+    console.log('选择的分类',opt)
+    var role_id
+    if(opt=='业务经理'){
+      role_id=2
+    }else if(opt=='销售总监'){
+      role_id=3
+    }else if(opt=='总经理'){
+      role_id=4
+    }else if(opt=='全部角色'){
+      role_id=''
+    }
+
+  var	Token=window.localStorage.getItem('token')
+  var	that=this
+  var	params={
+  Token,
+  role_id
+  }
+  this.$ajax.post('/user/listManager',params).then((res)=>{
+      console.log('请求分类员工列表结果',res)
+    if(res.data.code==200){
+      var res=res.data.data
+      that.details=res
+    }else{
+    alert(res.data.msg)
+  }
+    }).catch((err)=>{
+      console.log('请求失败',err)
+    })
   },
 },
 //生命周期 - 创建完成（可以访问当前this实例）
@@ -333,7 +327,26 @@ created() {
 mounted() {
 
 },
-beforeCreate() {}, //生命周期 - 创建之前
+beforeCreate() {
+  var	Token=window.localStorage.getItem('token')
+  var role_id=''
+  var	that=this
+  var	params={
+  Token,
+  role_id
+  }
+  this.$ajax.post('/user/listManager',params).then((res)=>{
+      console.log('请求员工列表结果',res)
+    if(res.data.code==200){
+      var res=res.data.data
+      that.details=res
+    }else{
+    alert(res.data.msg)
+  }
+    }).catch((err)=>{
+      console.log('请求失败',err)
+    })
+}, //生命周期 - 创建之前
 beforeMount() {}, //生命周期 - 挂载之前
 beforeUpdate() {}, //生命周期 - 更新之前
 updated() {}, //生命周期 - 更新之后

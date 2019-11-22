@@ -17,8 +17,8 @@
     <!-- 客户类型 -->
       <el-form-item label="客户类型">
         <el-select v-model="form.type" placeholder="请选择客户类型">
-          <el-option label="中方客户" value="中方客户"></el-option>
-          <el-option label="外方客户" value="外方客户"></el-option>
+          <el-option label="中方客户" value="1"></el-option>
+          <el-option label="外方客户" value="2"></el-option>
         </el-select>
       </el-form-item>
     <!-- 联系人 -->
@@ -53,9 +53,6 @@
         <el-input type="text" placeholder="请提供完整正确的单位代码" v-model="form.code"></el-input>
       </el-form-item>
       <!-- 邮箱 -->
-      <el-form-item style="margin-left:101px;;" label="邮箱">
-        <el-input type="email" placeholder="请填写联系人邮箱" v-model="form.email"></el-input>
-      </el-form-item>
     <!-- Facebook -->
       <el-form-item style="margin-left:101px;" label="Facebook">
         <el-input type="text" placeholder="请填写客户Facebook" v-model="form.userface"></el-input>
@@ -71,14 +68,25 @@
       <el-form-item>
        <el-input style="margin-left:-50px" type="text" placeholder="请填写详细地址" v-model="form.address"></el-input>
       </el-form-item> 
-    </div>  
+    </div>
+     <!-- 第五行 -->
+    <div class="d-flex">
+     <!-- 账号 -->
+      <el-form-item label="email账号">
+        <el-input type="email" placeholder="请填写email账号" v-model="form.email"></el-input>
+      </el-form-item>
+      <!-- 密码 -->
+      <el-form-item style="margin-left:101px;;" label="登录密码">
+        <el-input type="email" placeholder="请填写登录密码" v-model="form.pwd"></el-input>
+      </el-form-item>
+    </div>
     <!-- 选择客户业务类型 -->
     <div class="chooseTitle">选择客户业务类型</div>
     <div style="margin-top:26px;">
      <el-form-item label="业务类型">
         <el-select v-model="form.type2" placeholder="请选择客户业务类型">
-          <el-option label="一般业务客户" value="一般业务客户"></el-option>
-          <el-option label="融资业务客户" value="融资业务客户"></el-option>
+          <el-option label="一般业务客户" value="1"></el-option>
+          <el-option label="融资业务客户" value="2"></el-option>
         </el-select>
      </el-form-item>
     </div>
@@ -92,11 +100,11 @@
         <li>营业执照<span>*</span></li>
         <li>法定代表人与实际控制人身份证<span>*</span></li>
         <li>银行账户信息<span>*</span></li>
-        <li :style="form.type2=='一般业务客户'||form.type2==''?'display:none':''">征信报告（公司、法人及实际控制人）<span>*</span></li>
-        <li :style="form.type2=='一般业务客户'||form.type2==''?'display:none':''">最近一次验资报告</li>
+        <li v-if="form.type2==2">征信报告（公司、法人及实际控制人）<span>*</span></li>
+        <li v-if="form.type2==2">最近一次验资报告</li>
         <div style="color:#FF0000;font-size:14px;font-weight:400;margin-left:-16px;margin-top:9px;">注：以上资料均为复印件（加盖企业公章）</div>
       </ol>
-      <ol style="margin-left:200px;" :style="form.type2=='一般业务客户'||form.type2==''?'display:none':''" start="6">
+      <ol style="margin-left:200px;" v-if="form.type2==2" start="6">
         <li>公司章程</li>
         <li>企业简介</li>
         <li>主营相关资格证书</li>
@@ -107,8 +115,10 @@
   </div>
   <div style="margin-left:57px;">
     <el-upload
-  class="upload-demo" ref="upload" action="https://jsonplaceholder.typicode.com/posts/" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList" :auto-upload="false">
-    <button class="upload"><img style="width:10px;height:10px;" src="../../../assets/waimao/icon/add.png" alt="">上传资料</button>
+  class="upload-demo" ref="upload" :on-change="getFileName" action="http://192.168.0.140:8002/main/tools/upFile" :on-preview="handlePreview" :on-success="upsuc" :on-remove="handleRemove" :file-list="fileList" :auto-upload="true">
+    <!-- <el-button class="" size="small" type="primary" slot="trigger"><img style="width:10px;height:10px;" src="../../../assets/waimao/icon/add.png" alt="">选取资料</el-button> -->
+    <el-button size="small" type="primary"  @click="submitUpload">上传资料</el-button>
+    <!-- <div slot="tip" class="el-upload-list__item-name">{{fileList}}</div> -->
     </el-upload>
   </div>
   <!--  -->
@@ -130,8 +140,10 @@ components: {},
 data() {
   //这里存放数据
 return {
+  // 后台返回上传地址
+  files:[],
   // 上传文件地址
-   fileList: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
+   fileList: [ ],
   // 省份
   province:"",
   // 城市
@@ -168,6 +180,8 @@ return {
     address:"",
     // 邮箱
     email:"",
+    // 密码,
+    pwd:'',
   }
 };
 },
@@ -178,15 +192,38 @@ watch: {},
 //方法集合
 methods: {
   // 上传文件
-  submitUpload() {
-        this.$refs.upload.submit();
-      },
-       handleRemove(file, fileList) {
-        console.log(file, fileList);
-      },
-      handlePreview(file) {
-        console.log(file);
-      },
+  /**
+   * 选取文件
+   */
+getFileName(){
+  
+},
+upsuc(e){
+  console.log('上传成功',e)
+  this.files.push(e.data)
+  this.look=e.data.full_path
+  console.log('查看的地址',this.look)
+  // this.sp.push(e.data.path('_'))
+},
+submitUpload(file) {
+  this.$refs.upload.submit();
+},
+handleRemove(file, fileList,e) {
+  console.log('删除的文件地址',file,'删除的文件路径', fileList,e);
+  // this.files
+  for(var i in file){
+    for(var m in this.files){
+      if(file[i].name==this.files[m].file_name){
+        this.files.splice(m,1)
+      }
+    }
+  }
+},
+handlePreview(file) {
+  // console.log('文件列表',file);
+  console.log('查看的文件地址',this.look)
+  window.open(this.look)
+},
   // 提交地区信息
   sub(data){
   console.log("省份："+data.province.value)
@@ -196,23 +233,61 @@ methods: {
   this.city=data.city.value
   this.area=data.area.value
   },
+  /**
+   * 上传文件
+   */
 // 提交所有信息
 submit(){
+  // this.$refs.upload.submit();
+  console.log('上传返回的路径',this.files)
   console.log(this.form)
   console.log("省份："+this.province,"城市："+this.city,"地区："+this.area)
-  var form=JSON.stringify(this.form)
+  // var form=JSON.stringify(this.form)
   var province=this.province
   var city=this.city
   var area=this.area
- this.$router.push({
-      path:'/chinauser',
-      query:{
-        form,
-        province,
-        city,
-        area
-      }
+// console.log(this.form.type)
+  var form=this.form
+  var	Token=window.localStorage.getItem('token')
+  var	that=this
+  var	params={
+  Token,
+  customer_type:form.type,
+  name:form.username,
+  wechat:form.userwx,
+  corporate_name:form.com,
+  mobile:form.userphone,
+  what_app:form.userwhat,
+  corporate_code:form.code,
+  facebook:form.userface,
+  address:this.select.province+this.select.city+this.select.area+form.address,
+  email:form.email,
+  passwd:form.pwd,
+  role_id:1,
+  user_type:form.type2
+  }
+  console.log('填写的详细地址',params.address)
+  this.$ajax.post('/auth/register',params).then((res)=>{
+      console.log('请求结果',res)
+    if(res.data.code==200){
+      var user_id
+    }else{
+    alert(res.data.msg)
+  }
+    }).catch((err)=>{
+      console.log('请求失败',err)
     })
+
+
+//  this.$router.push({
+//       path:'/chinauser',
+//       query:{
+//         form,
+//         province,
+//         city,
+//         area
+//       }
+//     })
 },
 },
 //生命周期 - 创建完成（可以访问当前this实例）

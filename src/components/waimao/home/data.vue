@@ -1,4 +1,4 @@
-<!-- 数据统计 -->
+<!-- 经理端数据统计 -->
 <template>
 <div class='data'>
   <!-- 数量 -->
@@ -217,7 +217,19 @@ mounted() {
 
 },
 beforeCreate() {
-  
+    var	that=this
+    var	params={
+    }
+    this.$ajax.post('/index/index',params).then((res)=>{
+        console.log('请求结果',res)
+      if(res.data.code==200){
+
+      }else{
+      alert(res.data.msg)
+    }
+      }).catch((err)=>{
+        console.log('请求失败',err)
+      })
 }, //生命周期 - 创建之前
 beforeMount() {}, //生命周期 - 挂载之前
 beforeUpdate() {}, //生命周期 - 更新之前

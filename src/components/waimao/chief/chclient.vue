@@ -1,4 +1,4 @@
-<!-- 平台客户列表 -->
+<!-- 总监角色列表 -->
 <template>
 <div class='client'>
   <!-- 头部 -->
@@ -84,7 +84,20 @@ methods: {
 },
 //生命周期 - 创建完成（可以访问当前this实例）
 created() {
-
+  var	Token=window.localStorage.getItem('token')
+  var	that=this
+  var	params={
+  Token,
+  }
+  this.$ajax.post('',params).then((res)=>{
+      console.log('请求结果',res)
+    if(res.data.code==200){
+    }else{
+    alert(res.data.msg)
+  }
+    }).catch((err)=>{
+      console.log('请求失败',err)
+    })
 },
 //生命周期 - 挂载完成（可以访问DOM元素）
 mounted() {

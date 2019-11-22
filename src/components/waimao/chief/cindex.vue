@@ -5,7 +5,7 @@
   <div class="boxs">
     <div v-for="(item,i) in boxs" :key="i">
       <div class="box">
-          <router-link :to="item.link">
+          <!-- <router-link :to="item.link"> -->
         <div class="d-flex">
           <div style="width:31px;height:31px;line-height:107px;margin-left:16px;">
             <img style="width:31px;height:31px;" :src="item.src" alt=""/>
@@ -14,7 +14,7 @@
           <span class="eng">{{item.eng}}</span>
         </div>
         <div class="num">{{item.num}}</div>
-          </router-link>
+          <!-- </router-link> -->
       </div>
     </div>
   </div>
@@ -121,44 +121,44 @@ return {
     {
       link:"/demo",
       title:"用户下单",
-      num:10
+      num:0
     },
     {
       link:"/demo2",
       title:"订单准入",
-      num:8
+      num:0
     },
     {
       link:"/demo",
       title:"合同签订",
-      num:10
+      num:0
     },
     {
       link:"/demo2",
       title:"验货出货",
-      num:8
+      num:0
     },
   ],
    status2:[
     {
       link:"/demo2",
       title:"收款付款",
-      num:10
+      num:0
     },
     {
       link:"/demo2",
       title:"报关运输",
-      num:8
+      num:0
     },
     {
       link:"/demo2",
       title:"缴税退税",
-      num:10
+      num:0
     },
     {
       link:"/demo",
       title:"结算汇总",
-      num:8
+      num:0
     },
   ],
   // 、、、、、、、、、、、、、、
@@ -217,7 +217,48 @@ mounted() {
 
 },
 beforeCreate() {
-  
+  /**
+   * 消息列表
+   */
+  var	that=this
+  var Token=window.localStorage.getItem('token')
+  var	params={  
+    Token
+  }
+  this.$ajax.post('/index/index',params).then((res)=>{
+      console.log('请求首页结果',res)
+    if(res.data.code==200){
+      // 用户总量
+      that.boxs[0].num=res.data.data.user_num
+      // 总订单数
+      that.boxs[1].num=res.data.data.order_num
+      // 进口订单
+      that.boxs[2].num=res.data.data.enter_num
+      // 出口订单
+      that.boxs[3].num=res.data.data.out_num
+      // 用户下单
+      that.status[0].num=res.data.data.user_order
+      // 订单准入
+      that.status[1].num=res.data.data.access_num
+      // 合同签订
+      that.status[2].num=res.data.data.sign_num
+      // 验货出货
+      that.status[3].num=res.data.data.shipment_num
+      // 收款付款
+      that.status[0].num=res.data.data.payment_num
+      // 报关运输
+      that.status[1].num=res.data.data.transport
+      // 缴税退税
+      that.status[2].num=res.data.data.drawback_num
+      // 结算汇总
+      that.status[3].num=res.data.data.summary_num
+    }else{
+    alert(res.data.msg)
+  }
+    }).catch((err)=>{
+      console.log('请求失败',err)
+    })
+
 }, //生命周期 - 创建之前
 beforeMount() {}, //生命周期 - 挂载之前
 beforeUpdate() {}, //生命周期 - 更新之前

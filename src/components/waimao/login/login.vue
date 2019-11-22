@@ -1,4 +1,4 @@
-<!--  -->
+<!-- 登录 -->
 <template>
 <div class='bg'>
   <div class="img">
@@ -64,13 +64,50 @@ methods: {
  submit(){
    console.log(this.login.email)
    console.log(this.login.pwd)
-     this.$router.push({  //核心语句
-        name:'demo2',   //引用router注册的组件进行跳转
-        params:{           //路由传参时push和query搭配使用 ，作用时传递参数
+    //  this.$router.push({  //核心语句
+    //     name:'uindex',   //引用router注册的组件进行跳转
+    //     params:{           //路由传参时push和query搭配使用 ，作用时传递参数
+    //       email:this.login.email,  
+    //       pwd:this.login.pwd,  
+    //     }
+    //   })
+var params={           //路由传参时push和query搭配使用 ，作用时传递参数
           email:this.login.email,  
-          pwd:this.login.pwd,  
+          passwd:this.login.pwd,  
         }
-      })
+        
+  var that=this
+  this.$ajax.post('/auth/loginByEmail',params).then((res)=>{
+    console.log('请求结果',res)
+    if(res.data.code==200){
+      // that.$router.push({
+      //     path:'/uindex'
+      //   })
+        var role_id=res.data.data.role_id  //(1=>'客户',2=>'业务经理',3=>'总监',4=>'总经理')
+        window.localStorage.setItem('role_id',role_id)
+        var token=res.data.data.token
+        window.localStorage.setItem('token',token)
+        var manager_id=res.data.data.id
+        window.localStorage.setItem('manager_id',manager_id)
+        var goto
+        if(role_id==1){
+          goto='/uindex'
+          }else if(role_id==2){
+            goto='/demo'
+          }else if(role_id==3){
+            goto='/cindex'
+          }else if(role_id==4){
+            goto='/cindex'
+          }
+            that.$router.push({
+              path:goto
+            })
+    }else{
+      alert(res.data.msg)
+    }
+  }).catch((err)=>{
+    console.log('请求失败',err)
+  })
  },
 //  注册
 reg(){

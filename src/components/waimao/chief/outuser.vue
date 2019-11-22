@@ -1,4 +1,4 @@
-<!-- 中方客户 -->
+<!-- 外方客户 -->
 <template>
 <div class='chinaUser'>
   <!-- 顶部导航条 -->
@@ -75,7 +75,6 @@
             <!-- 操作 -->
             <td style="height:40px;width:181px;">
               <button class="btn look" @click="look(i)">查看</button>
-              <button class="btn set" @click="set(i)">编辑</button>
             </td>
           </tr>
         </table>
@@ -371,23 +370,14 @@ mounted() {
 
 },
 beforeCreate() {
-  var	Token=window.localStorage.getItem('token')
-  var	that=this
-  var	params={
-  Token,
-  pageNum:1,
-  pageSize:15,
-  }
-  this.$ajax.post('/user/listUser',params).then((res)=>{
-      console.log('请求所有中方客户结果',res)
-    if(res.data.code==200){
-
-    }else{
-    alert(res.data.msg)
-  }
-    }).catch((err)=>{
-      console.log('请求失败',err)
-    })
+  var query=this.$route.query
+  console.log("添加客户传来的值")
+  // var newarr=query.form.type
+  // this.lists.push({newarr})
+  // var newarr=JSON.parse(query.form)
+  // console.log(newarr);
+  
+  console.log(query.city)
 }, //生命周期 - 创建之前
 beforeMount() {}, //生命周期 - 挂载之前
 beforeUpdate() {}, //生命周期 - 更新之前

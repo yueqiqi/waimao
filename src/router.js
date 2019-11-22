@@ -88,6 +88,7 @@ import cindex from './components/waimao/chief/cindex.vue'  // 主页
 import chclient from './components/waimao/chief/chclient.vue'  // 客户列表
 import chroot from './components/waimao/chief/chroot'  // 权限设置
 import chuser from './components/waimao/chief/chuser'  // 客户列表
+import outuser from './components/waimao/chief/outuser'  // 客户列表
 import chorders from './components/waimao/chief/chorders'  // 订单列表
 import chorderImport from './components/waimao/chief/chorderImport'  // 订单进出口
 import sfout from './components/waimao/chief/sfout'  // 订单进出口
@@ -167,6 +168,12 @@ export default new Router({
     {
       path: '/chuser',
      component: chuser,
+     hidden: true
+    },
+    // 外方客户
+    {
+      path: '/outuser',
+     component: outuser,
      hidden: true
     },
     // 订单列表

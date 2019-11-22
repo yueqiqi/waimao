@@ -9,8 +9,8 @@
     <!-- 客户类型 -->
       <el-form-item label="客户类型">
         <el-select v-model="form.type" placeholder="请选择客户类型">
-          <el-option label="中方客户" value="中方客户"></el-option>
-          <el-option label="外方客户" value="外方客户"></el-option>
+          <el-option label="中方客户" value="1"></el-option>
+          <el-option label="外方客户" value="2"></el-option>
         </el-select>
       </el-form-item>
     <!-- 联系人 -->
@@ -23,8 +23,8 @@
       <!-- 业务类型 -->
       <el-form-item label="业务类型">
         <el-select v-model="form.type2" placeholder="请选择业务类型">
-          <el-option label="一般业务客户" value="一般业务客户"></el-option>
-          <el-option label="融资业务客户" value="融资业务客户"></el-option>
+          <el-option label="一般业务客户" value="1"></el-option>
+          <el-option label="融资业务客户" value="2"></el-option>
         </el-select>
       </el-form-item>
     <!-- 联系电话 -->
@@ -71,6 +71,7 @@
     </el-form-item>
     </el-form>
     <button class="mybtn" @click="submit">提交信息</button>
+  <button @click="jump" class="jump">跳过此步骤</button>
 </div>
   </div>
 </template>
@@ -96,7 +97,7 @@ return {
     // 业务类型
     type2:"",
     // 联系电话
-    phone:"",
+    userphone:"",
     // 单位名称
     com:"",
     // 微信
@@ -104,7 +105,7 @@ return {
     // 单位代码
     code:"",
     // whatAPP
-    what:"",
+    userwhat:"",
     // Facebook
     userface:"",
     // 详细地址
@@ -118,9 +119,45 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
+  /**
+   * 跳过此步骤
+   */
+  jump(){
+    this.$router.push({
+      path:'/uindex'
+    })
+  },
   // 提交信息
 submit(){
   console.log(this.form.type)
+  var	that=this
+  var	params={
+    user_id:'',
+    customer_type:this.form.type,
+    user_type:this.form.type2,
+    corporate_name:this.form.com,
+    corporate_code:this.form.code,
+    address:this.select.province+this.select.city+this.select.area+this.form.address,
+    name:this.form.username,
+    abbreviation:'',
+    mobile:this.form.userphone,
+    wechat:this.form.userwx,
+    what_app:this.form.userwhat,
+    facebook:this.form.userface
+  }
+console.log('所有的信息',this.form)
+  this.$ajax.post('/auth/setUserInfo',params).then((res)=>{
+      console.log('请求结果',res)
+    if(res.data.code==200){
+      that.$router.push({
+        path:'/login'
+      })
+    }else{
+    alert(res.data.msg)
+  }
+    }).catch((err)=>{
+      console.log('请求失败',err)
+    })
 },
 // 地址信息
 sub(data){
@@ -215,5 +252,12 @@ font-family:Microsoft YaHei;
 border:0;
 margin-left:250px;
 margin-top:105px;
+}
+.jump{
+  background: rgb(255, 31, 31);
+  border:0;
+  width:200px;height:50px;border-radius: 10px;
+  font-size: 20px;color:#fff;
+  margin-left: 40px;
 }
 </style>

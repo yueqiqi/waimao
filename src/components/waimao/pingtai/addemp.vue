@@ -23,22 +23,31 @@
         <el-input placeholder="请填写首字母简写" v-model="form.jx"></el-input>
       </el-form-item>
       <!-- 英文名 -->
-      <el-form-item style="margin-left:101px;" label="英文名">
+      <!-- <el-form-item style="margin-left:101px;" label="英文名">
         <el-input type="text" placeholder="请填写英文名" v-model="form.englishname"></el-input>
-      </el-form-item>
-    </div>
-
-    <div class="d-flex">
-       <!-- 联系电话 -->
-      <el-form-item label="联系电话">
+      </el-form-item> -->
+      <el-form-item style="margin-left:101px;" label="联系电话">
         <el-input type="number" placeholder="请填写联系电话" v-model="form.phone"></el-input>
       </el-form-item>
+    </div>
+    <div class="d-flex">
+       <!-- 联系电话 -->
     <!-- 角色选择 -->
-      <el-form-item style="margin-left:101px;" label="角色选择">
+      <el-form-item  label="角色选择">
         <el-select v-model="form.type" placeholder="请选择角色身份">
-          <el-option label="采购合同" value="采购合同"></el-option>
-          <el-option label="销售合同" value="销售合同"></el-option>
+          <!-- <el-option label="客户" value="1"></el-option> -->
+          <el-option label="业务经理" value="2"></el-option>
+          <el-option label="总监" value="3"></el-option>
+          <el-option label="总经理" value="4"></el-option>
         </el-select>
+      </el-form-item>
+      <!-- 邮箱 -->
+      <el-form-item style="margin-left:101px;" label="邮箱">
+        <el-input type="text" placeholder="请填写邮箱" v-model="form.email"></el-input>
+      </el-form-item>
+      <!-- 密码 -->
+      <el-form-item style="margin-left:101px;" label="密码">
+        <el-input type="text" placeholder="请填写密码" v-model="form.pwd"></el-input>
       </el-form-item>
     </div>
     </el-form>
@@ -65,12 +74,14 @@ return {
     name:"",
     // 名字简写
     jx:"",
-    // 英文名
-    englishname:"",
     // 联系电话
     phone:"",
     // 角色选择
     type:"",
+    //邮箱
+    email:'',
+    // 密码
+    pwd:'',
   }
 };
 },
@@ -81,8 +92,33 @@ watch: {},
 //方法集合
 methods: {
   sub(){
-    console.log("提交")
-    console.log(this.form)
+    var manager_id=window.localStorage.getItem('manager_id')
+    var	that=this
+    var	params={
+    email:that.form.email,
+    passwd:that.form.pwd,
+    role_id:that.form.type,
+    mobile:that.form.phone,
+    name:that.form.name,
+    abbreviation:that.form.jx,
+    manager_id
+    }
+    this.$ajax.post('/auth/register',params).then((res)=>{
+        console.log('请求结果',res)
+      if(res.data.code==200){
+        this.$message({
+          message: res.data.msg,
+          type: 'success'
+        });
+          setTimeout(()=>{
+              that.$router.push('/emp')
+          },2000)
+      }else{
+      alert(res.data.msg)
+    }
+      }).catch((err)=>{
+        console.log('请求失败',err)
+      })
   },
 },
 //生命周期 - 创建完成（可以访问当前this实例）
