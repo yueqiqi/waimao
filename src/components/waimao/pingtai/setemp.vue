@@ -4,11 +4,11 @@
    <div class="adduser d-spb">
     <div class="d-flex"> 
       <div class="img"><img class="icon" src="../../../assets/waimao/icon/adduser.png" alt=""></div>
-      <div class="title">添加新员工</div>
+      <div class="title">修改员工</div>
     </div>
   </div>
   <div class="gaine">
-    <div class="addmes">填写员工基本信息</div>
+    <div class="addmes">修改员工基本信息</div>
     <el-form ref="form" style="margin-top:21px;" :model="form" label-position="left" label-width="78px">
   <!-- 第一行 -->
     <div class="d-flex">
@@ -40,9 +40,9 @@
         </el-select>
       </el-form-item>
       <!-- 邮箱 -->
-      <el-form-item style="margin-left:101px;" label="邮箱">
+      <!-- <el-form-item style="margin-left:101px;" label="邮箱">
         <el-input type="text" placeholder="请填写邮箱" v-model="form.email"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <!-- 密码 -->
       <el-form-item style="margin-left:101px;" label="密码">
         <el-input type="text" placeholder="请填写密码" v-model="form.pwd"></el-input>
@@ -50,7 +50,7 @@
     </div>
     </el-form>
     <!-- gaine -->
-    <button @click="sub" class="btn sub">确认添加</button>
+    <button @click="sub" class="btn sub">确认修改</button>
   </div>
   <!-- /addemp -->
 </div>
@@ -93,16 +93,15 @@ methods: {
     var manager_id=window.localStorage.getItem('manager_id')
     var	that=this
     var	params={
-    email:that.form.email,
     passwd:that.form.pwd,
     role_id:that.form.type,
     mobile:that.form.phone,
     name:that.form.name,
     abbreviation:that.form.jx,
-    manager_id
+    user_id:that.user_id
     }
-    this.$ajax.post('/auth/register',params).then((res)=>{
-        console.log('请求结果',res)
+    this.$ajax.post('/user/editUser',params).then((res)=>{
+        console.log('请求修改员工结果',res)
       if(res.data.code==200){
         this.$message({
           message: res.data.msg,
@@ -127,7 +126,41 @@ created() {
 mounted() {
 
 },
-beforeCreate() {}, //生命周期 - 创建之前
+beforeCreate() {
+  console.log('id的值',this.$route.query.id)
+  this.user_id=this.$route.query.id
+  var	Token=window.localStorage.getItem('token')
+  var	that=this
+  var	params={
+  Token,
+  user_id:this.$route.query.id
+  }
+  this.$ajax.post('/auth/getUserInfo',params).then((res)=>{
+      console.log('请求修改员工结果',res)
+    if(res.data.code==200){
+      var form=this.form
+      var res =res.data.data.user
+      form.name=res.name
+      form.jx=res.abbreviation
+      form.phone=res.mobile
+      var role_id
+      if(res.role_id==2){
+        role_id='业务经理'
+      }else if(res.role_id==3){
+        role_id='总监'
+      }else{
+        role_id='总经理'
+      }
+      form.type=role_id
+      // form.pwd=res.passwd
+
+    }else{
+    alert(res.data.msg)
+  }
+    }).catch((err)=>{
+      console.log('请求失败',err)
+    })
+}, //生命周期 - 创建之前
 beforeMount() {}, //生命周期 - 挂载之前
 beforeUpdate() {}, //生命周期 - 更新之前
 updated() {}, //生命周期 - 更新之后

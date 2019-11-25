@@ -1,4 +1,4 @@
-<!-- 订单列表 -->
+<!-- 委托订单列表--总监端 -->
 <template>
 <div class='order'>
   <div class="shaixuan d-flex">
@@ -589,7 +589,21 @@ var _this=this
 mounted() {
 },
 beforeCreate() {
-
+  var	Token=window.localStorage.getItem('token')
+  var	that=this
+  var	params={
+  Token,
+  }
+  this.$ajax.post('/entrust/listManager',params).then((res)=>{
+      console.log('请求委托订单结果',res)
+    if(res.data.code==200){
+      this.lists=res.data.data
+    }else{
+    alert(res.data.msg)
+  }
+    }).catch((err)=>{
+      console.log('请求失败',err)
+    })
 }, //生命周期 - 创建之前
 beforeMount() {
   

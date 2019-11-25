@@ -33,19 +33,19 @@
           <div><img class="icon" src="../../../assets/waimao/icon/saixuan2.png" alt=""></div>
           <div class="title2">筛选查询</div>
           <div class="title3">用户总数：</div>
-          <div class="all">{{all}}</div>
+          <div class="all">{{total}}</div>
         </div>
-        <div style="margin-right:60px;margin-top:19px;">
+        <div style="margin-right:145px;margin-top:19px;">
           <button class="btn add" @click="add"> <img class="addimg" src="../../../assets/waimao/icon/add.png" alt="">添加新客户</button>
         </div>
       </div>
       <!-- 分页详情 -->
       <div style="margin-left:21px;margin-top:22px;">
-        <table>
+        <table style="width:1487px;">
           <tr class="ths">
             <td style="height:40px;width:90px;background:rgba(237,237,237,1);">编号</td>
             <td style="height:40px;width:159px;background:rgba(237,237,237,1);">客户类型</td>
-            <td style="height:40px;width:120px;background:rgba(237,237,237,1);">用户名</td>
+            <!-- <td style="height:40px;width:120px;background:rgba(237,237,237,1);">用户名</td> -->
             <td style="height:40px;width:291px;background:rgba(237,237,237,1);">单位名称</td>
             <td style="height:40px;width:120px;background:rgba(237,237,237,1);">联系人</td>
             <td style="height:40px;width:140px;background:rgba(237,237,237,1);">联系电话</td>
@@ -60,9 +60,9 @@
             <!-- 编号 -->
             <td style="height:40px;width:91px;">{{item.id}}</td>
             <!-- 客户类型 -->
-            <td style="height:40px;width:160px;">{{item.customer_type==1?'中方客户':''}}</td>
+            <td style="height:40px;width:160px;">{{item.customer_type==1?'中方客户':'外方客户'}}</td>
             <!-- 用户名 -->
-            <td style="height:40px;width:121px;">{{item.uname}}</td>
+            <!-- <td style="height:40px;width:121px;">{{item.uname}}</td> -->
             <!-- 单位名称 -->
             <td style="height:40px;width:292px;">{{item.corporate_name}}</td>
             <!-- 联系人 -->
@@ -72,13 +72,13 @@
             <!-- 邮箱 -->
             <td style="height:40px;width:201px;">{{item.email}}</td>
             <!-- 所在地 -->
-            <td style="height:40px;width:121px;">{{item.address}}</td>
+            <td style="height:40px;width:121px;padding-left:14px;">{{item.address}}</td>
             <!-- 加入时间 -->
             <td style="height:40px;width:141px;">{{item.create_at.split(' ')[0]}}</td>
             <!-- 操作 -->
             <td style="height:40px;width:181px;">
-              <button class="btn look" @click="look(i)">查看</button>
-              <button class="btn set" @click="set(i)">编辑</button>
+              <!-- <button class="btn look" @click="look(i)">查看</button> -->
+              <button class="btn set"  @click="set(item.id)">编辑</button>
             </td>
           </tr>
         </table>
@@ -129,7 +129,7 @@ return {
   lists:[
   ],
   // 用户总数
-  all:"300",
+  total:"",
   // 是否禁用
 mybtn:true,
 // 
@@ -250,7 +250,8 @@ this.cur = data
     var	params={
     Token,
     pageNum:this.cur,
-    pageSize:15,
+    pageSize:13,
+    type:1
     }
     this.$ajax.post('/user/listUser',params).then((res)=>{
         console.log('请求分页结果',res)
@@ -274,7 +275,8 @@ pageClick: function(){
     var	params={
     Token,
     pageNum:this.cur,
-    pageSize:15,
+    pageSize:13,
+    type:1
     }
     this.$ajax.post('/user/listUser',params).then((res)=>{
         console.log('请求分页结果',res)
@@ -308,9 +310,6 @@ console.log("这是第"+this.cur+"页")
     // )
     this.$router.push({
       path:'/adduser',
-      query:{
-        id:1
-      }
     })
   },
   // 查看
@@ -320,26 +319,11 @@ console.log("这是第"+this.cur+"页")
   },
   // 编辑
   set(i){
-    console.log(i)
-    // this.lists.sort(function(a,b){return (b-a)})
-    // 数组的修改
-    // this.lists.splice(i,1,{
-    //   id:"100",
-    //   usertype:"中方客户",
-    //   uname:"添加用户",
-    //   com:"小红花贸易有限公司",
-    //   peo:"张三",
-    //   phone:13500000000,
-    //   email:"123456789@qq.com",
-    //   address:"西安",
-    //   jointime:"2019-05-20",
-    //   })
-    var userName=this.lists[i].uname
+    console.log(i) 
     this.$router.push({
       path:'/setuser',
       query:{
-        userName,
-        id:1,
+        id:i,
       }
     })
   },
@@ -351,11 +335,12 @@ console.log("这是第"+this.cur+"页")
     var	params={
     Token,
     pageNum:1,
-    pageSize:15,
+    pageSize:13,
     name:this.searchuser,
     mobile:this.searchphone,
     beg_create_at:this.stime,
-    end_create_at:this.etime
+    end_create_at:this.etime,
+    type:1
     }
     this.$ajax.post('/user/listUser',params).then((res)=>{
         console.log('请求结果',res)
@@ -387,12 +372,14 @@ beforeCreate() {
   var	params={
   Token,
   pageNum:1,
-  pageSize:15,
+  pageSize:13,
+  type:1
   }
   this.$ajax.post('/user/listUser',params).then((res)=>{
       console.log('请求中方客户列表结果',res)
     if(res.data.code==200){
-      this.lists=res.data.data.list
+      this.lists=res.data.data.list,
+      this.total=res.data.data.total
     }else{
     alert(res.data.msg)
   }
@@ -546,8 +533,10 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 tr td{
   text-align: center;
   color:rgba(102,102,102,1);
-  word-break:keep-all;/* 不换行 */
-  white-space:nowrap;overflow: hidden;text-overflow:ellipsis; 
+  /* 不换行 */
+  /* word-break:keep-all;
+  white-space:nowrap; */
+  overflow: hidden;text-overflow:ellipsis; 
   /* 省略号 */
 }
 /* 查看 */

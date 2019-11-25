@@ -85,8 +85,8 @@
     <div style="margin-top:26px;">
      <el-form-item label="业务类型">
         <el-select v-model="form.type2" placeholder="请选择客户业务类型">
-          <el-option label="一般业务客户" value="1"></el-option>
-          <el-option label="融资业务客户" value="2"></el-option>
+          <el-option label="一般业务" value="1"></el-option>
+          <el-option label="融资业务" value="2"></el-option>
         </el-select>
      </el-form-item>
     </div>
@@ -204,6 +204,11 @@ upsuc(e){
   this.look=e.data.full_path
   console.log('查看的地址',this.look)
   // this.sp.push(e.data.path('_'))
+    // 为原数组添加新的下标
+  this.files.forEach((item,index)=> {
+    item.num = index+1;
+    item.type=5
+  })
 },
 submitUpload(file) {
   this.$refs.upload.submit();
@@ -240,6 +245,8 @@ handlePreview(file) {
 submit(){
   // this.$refs.upload.submit();
   console.log('上传返回的路径',this.files)
+
+  console.log(this.files)
   console.log(this.form)
   console.log("省份："+this.province,"城市："+this.city,"地区："+this.area)
   // var form=JSON.stringify(this.form)
@@ -260,7 +267,7 @@ submit(){
   what_app:form.userwhat,
   corporate_code:form.code,
   facebook:form.userface,
-  address:this.select.province+this.select.city+this.select.area+form.address,
+  address:this.province+this.city+this.area+form.address,
   email:form.email,
   passwd:form.pwd,
   role_id:1,
@@ -270,24 +277,34 @@ submit(){
   this.$ajax.post('/auth/register',params).then((res)=>{
       console.log('请求结果',res)
     if(res.data.code==200){
-      var user_id
+      var user_id=res.data.user_id
+      /**
+       * 保存文件
+       */
+      var	that=this
+      // var	params={data:this.files}
+      this.$ajax.post('/tools/saveFile',({user_id:user_id,type:5,data:this.files})).then((res)=>{
+          console.log('上传文件结果',res)
+        if(res.data.code==200){
+          setTimeout(() => {
+            that.$router.push('/chinaUser')
+          }, 1500);
+        }else{
+        alert(res.data.msg)
+      }
+        }).catch((err)=>{
+          console.log('请求失败',err)
+        })
+        /**
+         * 
+         */
+         
     }else{
     alert(res.data.msg)
   }
     }).catch((err)=>{
       console.log('请求失败',err)
     })
-
-
-//  this.$router.push({
-//       path:'/chinauser',
-//       query:{
-//         form,
-//         province,
-//         city,
-//         area
-//       }
-//     })
 },
 },
 //生命周期 - 创建完成（可以访问当前this实例）

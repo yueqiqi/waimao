@@ -6,6 +6,11 @@ import Router from 'vue-router'
 //自定义组件
 import HelloContainer from "./components/HelloWorld.vue"
 
+// /////////////////////////////////////
+
+// /////////////////////////////////////
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 import demo from "./components/waimao/demo.vue"
 import demo2 from "./components/waimao/demo2.vue"
@@ -57,6 +62,7 @@ import client from './components/waimao/pingtai/client'  // 客户列表
 import root from './components/waimao/pingtai/root'  // 权限设置
 import emp from './components/waimao/pingtai/emp'  // 员工列表
 import addemp from './components/waimao/pingtai/addemp'  // 添加员工
+import setemp from './components/waimao/pingtai/setemp'  // 修改员工
 import lookuser from './components/waimao/pingtai/lookuser'  // 查看客户
 
 // *************************************************************************************************************************************************************************
@@ -341,6 +347,12 @@ export default new Router({
     {
       path: '/addemp',
        component: addemp,
+       hidden: true
+    },
+    // 修改员工
+    {
+      path: '/setemp',
+       component: setemp,
        hidden: true
     },
     // 查看客户

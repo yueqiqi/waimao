@@ -19,7 +19,8 @@ import qs from 'qs'
 axios.defaults.timeout = 5000 // 响应时间
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8' // 配置post请求头
 axios.defaults.headers.get['Content-Type'] = 'application/json;charset=UTF-8' // 配置get请求头
-axios.defaults.baseURL = 'http://ons.suipk.cn/main' // 配置接口地址
+// axios.defaults.baseURL = 'http://ons.suipk.cn/main' // 配置服务器接口地址
+axios.defaults.baseURL = 'http://192.168.0.140:8002/main' // 配置本地接口地址
 // POST传参序列化(添加请求拦截器)
 axios.interceptors.request.use((config) => {
 

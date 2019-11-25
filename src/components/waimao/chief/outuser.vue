@@ -19,9 +19,9 @@
     <!-- 时间筛选 -->
     <div class="d-flex" style="height:36px;margin:auto 0;">
       <div class="search">加入时间</div>
-      <div class="input"><el-date-picker v-model="stime" align="right" type="date" placeholder="选择日期" :picker-options="pickerOptions"></el-date-picker></div>
+      <div class="input"><el-date-picker v-model="stime" align="right" type="date" placeholder="选择日期" value-format='yyyy-MM-dd' :picker-options="pickerOptions"></el-date-picker></div>
       <div style="font-size:16px;font-weight:400;color:rgba(51,51,51,1);line-height:36px;margin-left:10px;margin-right:10px;">至</div>
-      <div style="margin-left:0px;" class="input"><el-date-picker v-model="etime" align="right" type="date" placeholder="选择日期" :picker-options="pickerOptions"></el-date-picker></div>
+      <div style="margin-left:0px;" class="input"><el-date-picker v-model="etime" align="right" type="date" value-format='yyyy-MM-dd' placeholder="选择日期" :picker-options="pickerOptions"></el-date-picker></div>
     </div>
     <!-- 查询按钮 -->
     <button class="btn mybtn" @click="search" :disabled="mybtn" :style="(searchuser==''&&searchphone==''&&(stime==''||etime==''))?'background:rgba(154,195,220,1)':''"  >查询结果</button>
@@ -33,16 +33,19 @@
           <div><img class="icon" src="../../../assets/waimao/icon/saixuan2.png" alt=""></div>
           <div class="title2">筛选查询</div>
           <div class="title3">用户总数：</div>
-          <div class="all">{{all}}</div>
+          <div class="all">{{total}}</div>
+        </div>
+        <div style="margin-right:145px;margin-top:19px;">
+          <button class="btn add" @click="add"> <img class="addimg" src="../../../assets/waimao/icon/add.png" alt="">添加新客户</button>
         </div>
       </div>
       <!-- 分页详情 -->
       <div style="margin-left:21px;margin-top:22px;">
-        <table>
+        <table style="width:1487px;">
           <tr class="ths">
             <td style="height:40px;width:90px;background:rgba(237,237,237,1);">编号</td>
             <td style="height:40px;width:159px;background:rgba(237,237,237,1);">客户类型</td>
-            <td style="height:40px;width:120px;background:rgba(237,237,237,1);">用户名</td>
+            <!-- <td style="height:40px;width:120px;background:rgba(237,237,237,1);">用户名</td> -->
             <td style="height:40px;width:291px;background:rgba(237,237,237,1);">单位名称</td>
             <td style="height:40px;width:120px;background:rgba(237,237,237,1);">联系人</td>
             <td style="height:40px;width:140px;background:rgba(237,237,237,1);">联系电话</td>
@@ -57,24 +60,25 @@
             <!-- 编号 -->
             <td style="height:40px;width:91px;">{{item.id}}</td>
             <!-- 客户类型 -->
-            <td style="height:40px;width:160px;">{{item.usertype}}</td>
+            <td style="height:40px;width:160px;">{{item.customer_type==1?'中方客户':'外方客户'}}</td>
             <!-- 用户名 -->
-            <td style="height:40px;width:121px;">{{item.uname}}</td>
+            <!-- <td style="height:40px;width:121px;">{{item.uname}}</td> -->
             <!-- 单位名称 -->
-            <td style="height:40px;width:292px;">{{item.com}}</td>
+            <td style="height:40px;width:292px;">{{item.corporate_name}}</td>
             <!-- 联系人 -->
-            <td style="height:40px;width:121px;">{{item.peo}}</td>
+            <td style="height:40px;width:121px;">{{item.name}}</td>
             <!-- 联系电话 -->
-            <td style="height:40px;width:141px;">{{item.phone}}</td>
+            <td style="height:40px;width:141px;">{{item.mobile}}</td>
             <!-- 邮箱 -->
             <td style="height:40px;width:201px;">{{item.email}}</td>
             <!-- 所在地 -->
-            <td style="height:40px;width:121px;">{{item.address}}</td>
+            <td style="height:40px;width:121px;padding-left:14px;">{{item.address}}</td>
             <!-- 加入时间 -->
-            <td style="height:40px;width:141px;">{{item.jointime}}</td>
+            <td style="height:40px;width:141px;">{{item.create_at.split(' ')[0]}}</td>
             <!-- 操作 -->
             <td style="height:40px;width:181px;">
-              <button class="btn look" @click="look(i)">查看</button>
+              <!-- <button class="btn look" @click="look(i)">查看</button> -->
+              <button class="btn set"  @click="set(item.id)">编辑</button>
             </td>
           </tr>
         </table>
@@ -123,57 +127,9 @@ return {
   // 888888888888888888888888888888888888888888888888
   // 列表
   lists:[
-    // 第一个用户
-    {
-      id:"01",
-      usertype:"中方客户",
-      uname:"张三",
-      com:"小红花贸易有限公司",
-      peo:"李胖子",
-      phone:13500000000,
-      email:"123456789@qq.com",
-      address:"西安",
-      jointime:"2019-05-20",
-    },
-    // 第二个用户
-    {
-      id:"02",
-      usertype:"中方客户",
-      uname:"李四",
-      com:"小红花贸易有限公司",
-      peo:"李胖子",
-      phone:13500000000,
-      email:"123456789@qq.com",
-      address:"西安",
-      jointime:"2019-05-20",
-    },
-    // 第三个用户
-    {
-      id:"03",
-      usertype:"中方客户",
-      uname:"王麻子",
-      com:"小红花贸易有限公司",
-      peo:"李胖子",
-      phone:13500000000,
-      email:"123456789@qq.com",
-      address:"西安",
-      jointime:"2019-05-20",
-    },
-    // 第四个用户
-    {
-      id:"04",
-      usertype:"中方客户",
-      uname:"小红",
-      com:"小红花贸易有限公司",
-      peo:"李胖子",
-      phone:13500000000,
-      email:"123456789@qq.com",
-      address:"西安",
-      jointime:"2019-05-20",
-    },
   ],
   // 用户总数
-  all:"300",
+  total:"",
   // 是否禁用
 mybtn:true,
 // 
@@ -263,7 +219,7 @@ methods: {
 			}
 		},
   //请求数据
-// dataListFn: function(index){
+dataListFn: function(index){
 // this.$axios.get("http://127.0.0.1:8090/demand/selectListByPage", 
 // {
 // params:{
@@ -283,12 +239,30 @@ methods: {
 // }
 
 // });
-// },
+},
 //分页
 btnClick: function(data){//页码点击事件
 if(data != this.cur){
 this.cur = data 
 }
+ var	Token=window.localStorage.getItem('token')
+    var	that=this
+    var	params={
+    Token,
+    pageNum:this.cur,
+    pageSize:13,
+    type:2
+    }
+    this.$ajax.post('/user/listUser',params).then((res)=>{
+        console.log('请求分页结果',res)
+      if(res.data.code==200){
+        this.lists=res.data.data.list
+      }else{
+      alert(res.data.msg)
+    }
+      }).catch((err)=>{
+        console.log('请求失败',err)
+      })
 //根据点击页数请求数据
 // this.lists(this.cur.toString());
 console.log("点击页码这是第"+this.cur+"页")
@@ -296,6 +270,24 @@ console.log("点击页码这是第"+this.cur+"页")
 pageClick: function(){
 //根据点击页数请求数据
 // this.dataListFn(this.cur.toString());
+      var	Token=window.localStorage.getItem('token')
+    var	that=this
+    var	params={
+    Token,
+    pageNum:this.cur,
+    pageSize:13,
+    type:2
+    }
+    this.$ajax.post('/user/listUser',params).then((res)=>{
+        console.log('请求分页结果',res)
+      if(res.data.code==200){
+        this.lists=res.data.data.list
+      }else{
+      alert(res.data.msg)
+    }
+      }).catch((err)=>{
+        console.log('请求失败',err)
+      })
 console.log("这是第"+this.cur+"页")
 },  
 
@@ -318,9 +310,6 @@ console.log("这是第"+this.cur+"页")
     // )
     this.$router.push({
       path:'/adduser',
-      query:{
-        id:1
-      }
     })
   },
   // 查看
@@ -330,32 +319,40 @@ console.log("这是第"+this.cur+"页")
   },
   // 编辑
   set(i){
-    console.log(i)
-    // this.lists.sort(function(a,b){return (b-a)})
-    // 数组的修改
-    // this.lists.splice(i,1,{
-    //   id:"100",
-    //   usertype:"中方客户",
-    //   uname:"添加用户",
-    //   com:"小红花贸易有限公司",
-    //   peo:"张三",
-    //   phone:13500000000,
-    //   email:"123456789@qq.com",
-    //   address:"西安",
-    //   jointime:"2019-05-20",
-    //   })
-    var userName=this.lists[i].uname
+    console.log(i) 
     this.$router.push({
       path:'/setuser',
       query:{
-        userName,
-        id:1,
+        id:i,
       }
     })
   },
   // 查询结果
   search(){
     console.log("联系人"+this.searchuser)
+    var	Token=window.localStorage.getItem('token')
+    var	that=this
+    var	params={
+    Token,
+    pageNum:1,
+    pageSize:13,
+    name:this.searchuser,
+    mobile:this.searchphone,
+    beg_create_at:this.stime,
+    end_create_at:this.etime,
+    type:2
+    }
+    this.$ajax.post('/user/listUser',params).then((res)=>{
+        console.log('请求结果',res)
+      if(res.data.code==200){
+        this.lists=res.data.data.list
+      }else{
+      alert(res.data.msg)
+    }
+      }).catch((err)=>{
+        console.log('请求失败',err)
+      })
+
     console.log("电话号码"+this.searchphone)
     console.log("开始时间"+this.stime)
     console.log("结束时间"+this.etime)
@@ -370,14 +367,25 @@ mounted() {
 
 },
 beforeCreate() {
-  var query=this.$route.query
-  console.log("添加客户传来的值")
-  // var newarr=query.form.type
-  // this.lists.push({newarr})
-  // var newarr=JSON.parse(query.form)
-  // console.log(newarr);
-  
-  console.log(query.city)
+  var	Token=window.localStorage.getItem('token')
+  var	that=this
+  var	params={
+  Token,
+  pageNum:1,
+  pageSize:13,
+  type:2
+  }
+  this.$ajax.post('/user/listUser',params).then((res)=>{
+      console.log('请求中方客户列表结果',res)
+    if(res.data.code==200){
+      this.lists=res.data.data.list,
+      this.total=res.data.data.total
+    }else{
+    alert(res.data.msg)
+  }
+    }).catch((err)=>{
+      console.log('请求失败',err)
+    })
 }, //生命周期 - 创建之前
 beforeMount() {}, //生命周期 - 挂载之前
 beforeUpdate() {}, //生命周期 - 更新之前
@@ -393,8 +401,6 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 }
 </script>
 <style scoped>
-/* @import url(); 引入公共css类 */
-/* 顶部指示器 */
 .top{
   width:1689px;height:50px;background:rgba(255,255,255,1);
   margin-top:1px;
@@ -409,7 +415,7 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 }
 .img{
   width:31px;height: 31px;margin:auto 0;
-  margin-left:16px;
+  margin-left:10px;
 }
 .title{
   font-size:24px;
@@ -525,8 +531,10 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 tr td{
   text-align: center;
   color:rgba(102,102,102,1);
-  word-break:keep-all;/* 不换行 */
-  white-space:nowrap;overflow: hidden;text-overflow:ellipsis; 
+  /* 不换行 */
+  /* word-break:keep-all;
+  white-space:nowrap; */
+  overflow: hidden;text-overflow:ellipsis; 
   /* 省略号 */
 }
 /* 查看 */

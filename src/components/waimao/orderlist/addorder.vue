@@ -586,9 +586,26 @@ submit2(){
 
 // 提交所有信息
 submit(){
-  console.log(this.form)
-  console.log("省份："+this.province,"城市："+this.city,"地区："+this.area)
   // var form=JSON.stdingify(this.form)
+  var form=this.form
+  var	Token=window.localStorage.getItem('token')
+  var	that=this
+  var	params={
+  Token,
+  
+  }
+  this.$ajax.post('/entrust/addEntrust',params).then((res)=>{
+      console.log('请求结果',res)
+    if(res.data.code==200){
+    }else{
+    alert(res.data.msg)
+  }
+    }).catch((err)=>{
+      console.log('请求失败',err)
+    })
+
+
+
   setTimeout(()=>{
     this.$router.push({
          path:'/mainsteps',

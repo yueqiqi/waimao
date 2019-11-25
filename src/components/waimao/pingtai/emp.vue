@@ -50,8 +50,8 @@
          <td>{{item.user_num}}</td>
          <td>{{item.order_num}}</td>
          <td>
-           <button class="btn look" @click="look(i)">删除</button>
-           <button class="btn set" @click="set(i)">编辑</button>
+           <button class="btn look" :data-idx="i" :data-id="item.id" @click="look">删除</button>
+           <button class="btn set" @click="set(item.id)">编辑</button>
          </td>
        </tbody>
      </table>
@@ -157,19 +157,42 @@ watch: {},
 //方法集合
 methods: {
   // 删除
-  look(i){
-    console.log(i)
+  look(e){
+    console.log(e.target.dataset.id)
+    var id= e.target.dataset.id
+    var idx=e.target.dataset.idx
+    console.log('下标',idx)
      this.$confirm('此操作将永久删除该员工, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           var _this=this
-        _this.details.splice(i,1)
+        _this.details.splice(idx,1)
           this.$message({
             type: 'success',
             message: '删除成功!'
           });
+          /**
+           * 请求删除数据接口
+           */
+          var	Token=window.localStorage.getItem('token')
+          var	that=this
+          var	params={
+          Token,
+          id
+          }
+          this.$ajax.post('/user/delStaff',params).then((res)=>{
+              console.log('请求删除员工结果',res)
+            if(res.data.code==200){
+
+            }else{
+            alert(res.data.msg)
+          }
+            }).catch((err)=>{
+              console.log('请求失败',err)
+            })
+            // 
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -180,48 +203,18 @@ methods: {
   // 编辑
   set(i){
     console.log(i)
-    // this.lists.sort(function(a,b){return (b-a)})
-    // 数组的修改
-    // this.lists.splice(i,1,{
-    //   id:"100",
-    //   usertype:"中方客户",
-    //   uname:"添加用户",
-    //   com:"小红花贸易有限公司",
-    //   peo:"张三",
-    //   phone:13500000000,
-    //   email:"123456789@qq.com",
-    //   address:"西安",
-    //   jointime:"2019-05-20",
-    //   })
-    // var userName=this.details[i]
     this.$router.push({
-      path:'/lookuser',
+      path:'/setemp',
       query:{
-        // userName,
-        id:1,
+        id:i,
       }
     })
   },
   // 添加用户
   add(){
-    // this.lists.push(
-    //   {
-    //   id:"05",
-    //   usertype:"中方客户",
-    //   uname:"添加用户",
-    //   com:"小红花贸易有限公司",
-    //   peo:"张三",
-    //   phone:13500000000,
-    //   email:"123456789@qq.com",
-    //   address:"西安",
-    //   jointime:"2019-05-20",
-    //   }
-    // )
+
     this.$router.push({
       path:'/addemp',
-      // query:{
-      //   id:1
-      // }
     })
   },
     // 888888888888888888888888888888888888888888888888888888888888
