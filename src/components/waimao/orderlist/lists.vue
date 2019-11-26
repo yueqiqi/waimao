@@ -501,7 +501,20 @@ mounted() {
   
 },
 beforeCreate() {
-
+  var	Token=window.localStorage.getItem('token')
+  var	that=this
+  var	params={
+  Token,
+  }
+  this.$ajax.post('/order/listOrder',params).then((res)=>{
+      console.log('请求结果',res)
+    if(res.data.code==200){
+    }else{
+    alert(res.data.msg)
+  }
+    }).catch((err)=>{
+      console.log('请求失败',err)
+    })
 }, //生命周期 - 创建之前
 beforeMount() {
   

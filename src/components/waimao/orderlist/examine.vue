@@ -62,12 +62,12 @@
   <!-- 上传文件 -->
   <div class="d-flex" style="margin-top:20px;" v-show="files">
     <div style="width:300px;">
-    <el-upload class="upload-demo" accept="file" ref="upload" action="https://jsonplaceholder.typicode.com/posts/" :on-preview="handlePreview" :on-remove="handleRemove" :on-success="success" :auto-upload="false" :file-list="fileList" :limit="1" :show-file-list="true">
-      <button class="upload"><img style="width:10px;height:10px;" src="../../../assets/waimao/icon/add.png" alt="">上传资料</button>
+    <el-upload class="upload-demo" accept="file" ref="upload":on-change="getFileName" action="http://192.168.0.140:8002/main/tools/upFile" :on-preview="handlePreview" :on-success="upsuc" :on-remove="handleRemove" :file-list="fileList" :auto-upload="true">
+      <el-button size="small" type="primary"  @click="submitUpload">上传资料</el-button>
       <div>
       </div>
     </el-upload>
-      <button class="btn mybtn" @click="submitfile">确认提交</button>
+      <button class="btn mybtn" @click="sub">确认提交</button>
     </div>
       <div style="margin-left:-190px;color:rgba(6,102,164,1);margin-top:6px;">请上传对应的验货资料</div>
     </div>
@@ -90,6 +90,7 @@
     </li>
   </ul>
 </div>
+  <!-- </div> -->
   <!-- =========================================================== -->
   <div class="tc" v-show="tc">
     <div class="alert">
@@ -132,6 +133,54 @@
   <!-- =========================================================== -->
   <!--  -->
   <!-- examine -->
+  <div style="" v-if="showsuccess">
+
+  <div  style="margin-top:36px;margin-bottom:10px;" class="time">商品信息</div>
+  <table style="width:1510px;">
+    <thead>
+      <td style="width:240px;">商品名称</td>
+      <td style="width:90px;">规格型号</td>
+      <td style="width:90px;">法定数量</td>
+      <td style="width:150px;">商品编码</td>
+      <td style="width:90px;">单位</td>
+      <td style="width:100px;">已出货数量</td>
+      <td style="width:110px;">剩余数量</td>
+      <td style="width:110px;">本次出货数量</td>
+      <td style="width:100px;">单价</td>
+      <td style="width:100px;">申报金额</td>
+      <td style="width:172px;">操作</td>
+      <td style="width:130px;border:0">是否完结</td>
+    </thead>
+    <tbody v-for="(item,i) in d2" :key="i">
+      <td>{{item.title}}</td>
+      <td>{{item.model}}</td>
+      <td>{{item.num}}</td>
+      <td>{{item.id}}</td>
+      <td>{{item.unit}}</td>
+      <td>{{item.outnum}}</td>
+      <td>{{item.residue}}</td>
+      <td>{{item.thisnum}}</td>
+      <td>{{item.price}}</td>
+      <td>{{item.money}}</td>
+      <td>
+        <button class="shipment" @click="shiment(i)" v-show="show2">出货</button>
+        <button class="shipment" style="background:#B74DEE" @click="sub(i)" v-show="show">提交</button>
+        <button class="list" style="margin-left:5px;" @click="list(i)">明细</button>
+      </td>
+
+      <td :style="item.yon=='已完结'?'color:red':''" class="last">{{item.yon}}</td>
+
+      <td class="last" style="width:0px;background:#fff;border:0;visibility:hidden">
+       <div v-show="true">
+        <div class="d-flex" style="z-index:100000;position:relative;left:-640px">
+            <div class="report">!</div>
+            <div class="reporttitle">出货总数超出溢短装5%的出货范围</div>
+          </div>
+      </div>
+      </td>
+    </tbody>
+  </table>
+  </div>
 </div>
 </template>
 
@@ -143,9 +192,13 @@ export default {
 //import引入的组件需要注入到对象中才能使用
 components: {},
 data() {
- 
-//这里存放数据
+  
+  //这里存放数据
 return {
+  // 
+  showsuccess:true,
+  // 后台返回上传地址
+  files:[],
   // 提交隐藏
   files:true,
   // 验货
@@ -283,29 +336,66 @@ computed: {
 watch: {},
 //方法集合
 methods: {
-  // 
-  // 是否上传成功
-  success(){
-    console.log("上传成功")
-  },
-  submitfile() {
-        this.$refs.upload.submit();
-        console.log("成功")
-        setTimeout(()=>{
-          var _this=this
-          _this.files=false
-        },3000)
-      },
-    // 删除文件
-handleRemove(file, fileList) {
-  console.log("删除文件")
-        console.log(file, fileList);
-      },
-      // 点击文件列表中已上传的文件时的钩子
+  getFileName(){
+  
+},
+upsuc(e){
+  console.log('上传成功',e)
+  this.files.push(e.data)
+  this.look=e.data.full_path
+  console.log('查看的地址',this.look)
+  // this.sp.push(e.data.path('_'))
+    // 为原数组添加新的下标
+  this.files.forEach((item,index)=> {
+    item.num = index+1;
+    item.type=5
+  })
+},
+submitUpload(file) {
+  this.$refs.upload.submit();
+},
+handleRemove(file, fileList,e) {
+  console.log('删除的文件地址',file,'删除的文件路径', fileList,e);
+  // this.files
+  for(var i in file){
+    for(var m in this.files){
+      if(file[i].name==this.files[m].file_name){
+        this.files.splice(m,1)
+      }
+    }
+  }
+},
 handlePreview(file) {
-  console.log("查看")
-        console.log(file);
-      },
+  // console.log('文件列表',file);
+  console.log('查看的文件地址',this.look)
+  window.open(this.look)
+},
+  // 确认提交
+  sub(){
+    this.showsuccess=ture
+      /**
+       * 保存文件
+       */
+      var	that=this
+      // var	params={data:this.files}
+      this.$ajax.post('/tools/saveFile',({order_:that.order_id,type:3,data:this.files})).then((res)=>{
+          console.log('上传文件结果',res)
+        if(res.data.code==200){
+          this.$message({
+          message: '上传成功',
+          type: 'success'
+        });
+        }else{
+        alert(res.data.msg)
+      }
+        }).catch((err)=>{
+          console.log('请求失败',err)
+        })
+  },
+        /**
+         * 
+         */
+
 // 关闭遮罩按钮
 close(){
   this.tc=false
@@ -346,7 +436,10 @@ created() {
 mounted() {
 
 },
-beforeCreate() {}, //生命周期 - 创建之前
+beforeCreate() {
+    var order_id=this.$route.query.order_id
+  console.log('合同亲低昂',order_id)
+}, //生命周期 - 创建之前
 beforeMount() {}, //生命周期 - 挂载之前
 beforeUpdate() {}, //生命周期 - 更新之前
 updated() {}, //生命周期 - 更新之后

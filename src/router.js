@@ -96,6 +96,7 @@ import chroot from './components/waimao/chief/chroot'  // 权限设置
 import chuser from './components/waimao/chief/chuser'  // 客户列表
 import outuser from './components/waimao/chief/outuser'  // 客户列表
 import chorders from './components/waimao/chief/chorders'  // 订单列表
+import orderDetail from './components/waimao/chief/orderDetail'  // 委托订单详情
 import chorderImport from './components/waimao/chief/chorderImport'  // 订单进出口
 import sfout from './components/waimao/chief/sfout'  // 订单进出口
 // 》》》》》》》》》》》》》》》
@@ -188,6 +189,12 @@ export default new Router({
      component: chorders,
      hidden: true
     },
+    // 委托订单详情
+    {
+      path: '/orderDetail',
+     component: orderDetail,
+     hidden: true
+    },    
     // 订单进出口
     {
       path: '/chorderImport',

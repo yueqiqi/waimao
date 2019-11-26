@@ -89,11 +89,13 @@ var params={           //路由传参时push和query搭配使用 ，作用时传
         window.localStorage.setItem('token',token)
         var manager_id=res.data.data.id
         window.localStorage.setItem('manager_id',manager_id)
+        var lid=res.data.data.id
+        window.localStorage.setItem('lid',lid)
         var goto
         if(role_id==1){
           goto='/uindex'
           }else if(role_id==2){
-            goto='/demo'
+            goto='/cindex'
           }else if(role_id==3){
             goto='/cindex'
           }else if(role_id==4){

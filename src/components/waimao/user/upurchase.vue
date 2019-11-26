@@ -1,4 +1,4 @@
-<!-- 委托采购 -->
+<!-- 委托销售 -->
 <template>
 <div class='usell'>
   <div class="adduser d-flex">
@@ -12,23 +12,20 @@
 <el-form @submit.native.prevent ref="form" :model="form" label-position="left" label-width="150px">
         <div class="chooseTitle">选择客户业务类型</div>
         <div style="margin-top:26px;">
-        <el-form-item label="选择委托类型">
+        <el-form-item label="请选择客户业务类型">
             <el-select v-model="form.type2" placeholder="请选择客户业务类型">
-              <el-option label="一般业务客户" value="一般业务客户"></el-option>
-              <el-option label="融资业务客户" value="融资业务客户"></el-option>
+              <el-option label="一般业务" value="1"></el-option>
+              <el-option label="融资业务" value="2"></el-option>
             </el-select>
         </el-form-item>
         </div>
-
-
-
         <!--  -->
         <!-- 第一行 -->
   <div class="chooseTitle" style="margin-top:60px;margin-bottom:19px;">填写委托方信息</div>
     <div class="d-flex">
     <!-- 委托时间 -->
       <el-form-item label="委托时间">
-        <el-input type="text" placeholder="请填写联系人姓名" v-model="form.time"></el-input>
+        <el-input type="text" placeholder="请填写时间:XXXX-XX-XX" v-model="form.time"></el-input>
       </el-form-item>
     <!-- 委托公司联系人 -->
       <el-form-item style="margin-left:70px;" label="委托公司联系人">
@@ -44,7 +41,7 @@
     <div class="d-flex">
        <!-- 委托公司信息 -->
       <el-form-item label="委托公司信息">
-        <el-input type="text" placeholder="" v-model="form.companymes"></el-input>
+        <el-input type="text" placeholder="请填写委托公司信息" v-model="form.companymes"></el-input>
       </el-form-item>
     <!-- 委托公司联系电话 -->
       <el-form-item style="margin-left:70px;" label="委托公司联系电话">
@@ -53,10 +50,10 @@
       <!-- 交货期 -->
       <el-form-item style="margin-left:70px;" label="交货期">
         <div class="d-flex">
-          <el-date-picker prefix-icon="" style="width:30px;" class="year" v-model="form.year" type="year" placeholder="年">
+          <el-date-picker prefix-icon="" style="width:30px;" class="year" v-model="form.year" value-format="yyyy" type="year" placeholder="年">
           </el-date-picker>
 
-          <el-date-picker prefix-icon="" class="months" v-model="form.month" format="MM-dd" type="date" placeholder="月-日">
+          <el-date-picker prefix-icon="" class="months" v-model="form.month" format="MM-dd" type="date" value-format="MM-dd" placeholder="月-日">
           </el-date-picker>
         </div>
       </el-form-item>
@@ -69,10 +66,7 @@
       </el-form-item>
       <!-- 付款方式 -->
       <el-form-item style="margin-left:70px;;" label="付款方式">
-        <el-select v-model="form.pay" placeholder="请选择付款方式">
-              <el-option label="支付宝" value="支付宝"></el-option>
-              <el-option label="微信" value="微信"></el-option>
-        </el-select>
+        <el-input type="text" placeholder="请填写付款方式" v-model="form.pay"></el-input>
       </el-form-item>
     <!-- 是否分批次运出 -->
       <el-form-item style="margin-left:70px;" label="备注信息">
@@ -81,18 +75,15 @@
     </div>
 
 <!-- 买入公司 -->
-    <div class="chooseTitle" style="margin-top:61px;margin-bottom:20px;">填写委托方信息</div>
+    <div class="chooseTitle" style="margin-top:61px;margin-bottom:20px;">填写合作方信息</div>
     <div class="d-flex">
     <!-- 买入公司名称 -->
-      <el-form-item label="买入公司名称">
+      <el-form-item label="卖方公司名称">
         <el-input type="text" placeholder="请填写联系人姓名" v-model="form.company2"></el-input>
       </el-form-item>
     <!-- 收汇方式 -->
       <el-form-item style="margin-left:70px;" label="收汇方式">
-        <el-select v-model="form.pay2" placeholder="请选择收汇方式">
-              <el-option label="支付宝" value="支付宝"></el-option>
-              <el-option label="微信" value="微信"></el-option>
-        </el-select>
+        <el-input type="text" placeholder="请填写收汇方式" v-model="form.pay2"></el-input>
       </el-form-item>
       <!-- 中信保授信额度 -->
       <el-form-item style="margin-left:70px;" label="中信保授信额度">
@@ -112,8 +103,9 @@
       <!-- 上传附件 -->
       <el-form-item style="margin-left:70px;" label="上传附件">
         <div>
-          <el-upload class="upload-demo" ref="form" action="https://jsonplaceholder.typicode.com/posts/" :on-preview="handlePreview" :on-remove="handleRemove" :on-success="success" :file-list="form.fileList" :auto-upload="false" :limit="1">
-        <button class="uploads" >上传采购清单（Excel格式）</button>
+          <el-upload class="upload-demo" ref="upload" :on-change="getFileName" action="http://192.168.0.140:8002/main/tools/upFile" :on-preview="handlePreview" :on-success="upsuc" :on-remove="handleRemove" :file-list="fileList" :auto-upload="true">
+        <!-- <button class="uploads" >上传采购清单（Excel格式）</button> -->
+        <el-button size="small" type="primary"  @click="submitUpload">上传采购清单（Excel格式）</el-button>
         </el-upload>
         </div>
       </el-form-item>
@@ -127,7 +119,7 @@
       <el-form-item style="margin-left:70px;" label="是否分批出运">
         <el-radio-group v-model="form.radio">
           <el-radio :label="1">是</el-radio>
-          <el-radio :label="2">否</el-radio>
+          <el-radio :label="0">否</el-radio>
         </el-radio-group>
       </el-form-item>
     </div>
@@ -139,16 +131,16 @@
       </el-form-item>
     <!-- 成交方式 -->
       <el-form-item style="margin-left:70px;" label="成交方式">
-       <el-select v-model="form.payway" placeholder="请选择成交方式">
+        <el-input type="text" placeholder="请填写授信额度" v-model="form.payway"></el-input>
+       <!-- <el-select v-model="form.payway" placeholder="请选择成交方式">
               <el-option label="支付宝" value="支付宝"></el-option>
               <el-option label="微信" value="微信"></el-option>
-        </el-select>
-      </el-form-item>
-      <!-- 添加多个卖方信息 -->
-      <el-form-item style="margin-left:70px;" label="添加多个卖方信息">
-        <button class="upload" @click="add"><img style="width:10px;height:10px;" src="../../../assets/waimao/icon/add.png" alt="">添加</button>
+        </el-select> -->
       </el-form-item>
     </div>
+      <div style="display:flex;justify-content: center;padding-bottom:20px">
+        <button @click="confirm" style="width:170px;height:46px;background:rgba(6,102,164,1);border-radius:10px;font-size:20px;color:#fff;border:0">完成提交</button>
+      </div>
 
 </el-form>
 
@@ -169,6 +161,10 @@ components: {},
 data() {
 //这里存放数据
 return {
+    // 后台返回上传地址
+  files:[],
+  // 上传文件地址
+   fileList: [ ],
   // 上传文件地址
   form:{
     // 成交方式
@@ -204,13 +200,13 @@ return {
     // 委托公司联系电话
     phone:"",
     // 委托公司信息
-    companymes:"仰光强大印务有限公司",
+    companymes:"",
     // 目的港
     goal:"",
     // 委托公司联系人
     linkman:"",
     // 委托时间
-    time:"2019-10-01",
+    time:"",
     // 客户类型
     type2:""
   }
@@ -222,52 +218,117 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
+  /**
+   * 添加委托采购--完成提交
+   */
+  confirm(){
+    // console.log(this.form)
+    var	Token=window.localStorage.getItem('token')
+    var	that=this
+    var user_id=window.localStorage.getItem('lid')
+    var form=this.form
+    var	params={
+    Token,
+    user_id,
+    entrust_type:1,
+    type:form.type2,
+    contacts:form.linkman,
+    objective_port:form.goal,
+    corporate_name:form.companymes,
+    phone:form.phone,
+    contract_money:form.sellmoney,
+    payment_type:form.pay,
+    delivery_date:form.year+'-'+form.month,
+    remarks:form.other,
+    seller_corporate_name:form.company2,
+    payment_method:form.pay2,
+    citic_quota:form.zxsb,
+    seller_name:form.linkman2,
+    seller_objective_port:form.goal2,
+    seller_phone:form.payphone,
+    is_batch:form.radio,
+    seller_contract_money:form.allmoney,
+    transaction_mode:form.payway
+    }
+    this.$ajax.post('/entrust/addEntrust',params).then((res)=>{
+        console.log('请求委托销售结果',res)
+      if(res.data.code==200){
+              var user_id=res.data.user_id
+      /**
+       * 保存文件
+       */
+      var	that=this
+      // var	params={data:this.files}
+      this.$ajax.post('/tools/saveFile',({user_id:user_id,type:5,data:this.files})).then((res)=>{
+          console.log('上传文件结果',res)
+        if(res.data.code==200){
+                  that.$message({
+          message: '添加成功',
+          type: 'success'
+        });
+          setTimeout(() => {
+            that.$router.push('/uindex')
+          }, 1500);
+        }else{
+        alert(res.data.msg)
+      }
+        }).catch((err)=>{
+          console.log('请求失败',err)
+        })
+        /**
+         * 
+         */
+      }else{
+      alert(res.data.msg)
+    }
+      }).catch((err)=>{
+        console.log('请求失败',err)
+      })
+
+  },
 // 添加卖方信息
 add(){
   console.log("添加多个卖方信息")
 },
-   // 是否上传成功
-  success(){
-    console.log("上传成功")
-  },
-  // // 确认提交
-  // submitUpload(){
-  //   this.success()
-  //   this.$refs.upload.submit();
-  //   console.log("asd ")
-  // setTimeout(()=>{
-  //   var _this=this
-  //   _this.hidden=false;
-  //   _this.hidden2=true
-  // },2000)
-  // },
-  // 
-  // 删除文件
-handleRemove(file, fileList) {
-  console.log("删除文件")
-        console.log(file, fileList);
-      },
-      // 点击文件列表中已上传的文件时的钩子
-handlePreview(file) {
-  console.log("查看")
-        console.log(file);
+  // 上传文件
+  /**
+   * 选取文件
+   */
+getFileName(){
+  
+},
+upsuc(e){
+  console.log('上传成功',e)
+  this.files.push(e.data)
+  this.look=e.data.full_path
+  console.log('查看的地址',this.look)
+  // this.sp.push(e.data.path('_'))
+    // 为原数组添加新的下标
+  this.files.forEach((item,index)=> {
+    item.num = index+1;
+    item.type=5
+  })
+},
+submitUpload(file) {
+  this.$refs.upload.submit();
+},
+handleRemove(file, fileList,e) {
+  console.log('删除的文件地址',file,'删除的文件路径', fileList,e);
+  // this.files
+  for(var i in file){
+    for(var m in this.files){
+      if(file[i].name==this.files[m].file_name){
+        this.files.splice(m,1)
       }
+    }
+  }
 },
-//生命周期 - 创建完成（可以访问当前this实例）
-created() {
-
+handlePreview(file) {
+  // console.log('文件列表',file);
+  console.log('查看的文件地址',this.look)
+  window.open(this.look)
 },
-//生命周期 - 挂载完成（可以访问DOM元素）
-mounted() {
-
 },
-beforeCreate() {}, //生命周期 - 创建之前
-beforeMount() {}, //生命周期 - 挂载之前
-beforeUpdate() {}, //生命周期 - 更新之前
-updated() {}, //生命周期 - 更新之后
-beforeDestroy() {}, //生命周期 - 销毁之前
-destroyed() {}, //生命周期 - 销毁完成
-activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 }
 </script>
 <style scoped>

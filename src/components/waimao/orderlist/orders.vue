@@ -67,14 +67,14 @@
               <li>联系人</li>
               <li>联系电话</li>
               <li>交货期</li>
-              <li>制定代贷信息与报关信息</li>
+              <!-- <li>制定代贷信息与报关信息</li> -->
             </ul>
               <ul class="u2 d-flex" >
-                <li style="margin-left:-40px;">{{ent.company}}</li>
-                <li style="width:188px;margin-right:0px;">{{ent.linkman}}</li>
+                <li style="margin-left:-40px;">{{ent.corporate_name}}</li>
+                <li style="width:188px;margin-right:0px;">{{ent.contacts}}</li>
                 <li style="margin-right:83px;width:120px">{{ent.phone}}</li>
-                <li >{{ent.etime}}</li>
-                <li >{{ent.dd}}</li>
+                <li >{{ent.delivery_date}}</li>
+                <!-- <li >{{ent.dd}}</li> -->
               </ul>
           </div>
           <div>
@@ -85,14 +85,14 @@
               <li style="margin-left:16px;">其他要求</li>
             </ul>
               <ul class="u2 d-flex" >
-                <li style="margin-left:-40px;">{{ent.money}}</li>
-                <li style="width:142px;">{{ent.paytype}}</li>
-                <li style="margin-right:40px;width:190px;">{{ent.goal}}</li>
-                <li >{{ent.other}}</li>
+                <li style="margin-left:-40px;">{{ent.contract_money}}</li>
+                <li style="width:142px;">{{ent.payment_type}}</li>
+                <li style="margin-right:40px;width:190px;">{{ent.objective_port}}</li>
+                <li style="margin-left:-30px;">{{ent.remarks}}</li>
               </ul>
           </div>
-          <div>备注</div>
-          <div style="font-size:14px;color:#0666A4;margin-top:9px;">{{ent.remark}}</div>
+          <!-- <div>备注</div>
+          <div style="font-size:14px;color:#0666A4;margin-top:9px;">{{ent.remarks}}</div> -->
         </div>
         <!--  -->
         <div>
@@ -111,12 +111,12 @@
     </table>
     <table class="table">
       <tr v-for="(item,i) in table" :key="i">
-        <td style="width:241px;">{{item.title}}</td>
-        <td style="width:181px;">{{item.type}}</td>
-        <td style="width:181px;">{{item.num}}</td>
-        <td style="width:166px;">{{item.unit}}</td>
-        <td style="width:166px;">{{item.hb}}</td>
-        <td style="width:181px;">{{item.price}}</td>
+        <td style="width:241px;">{{item.goods_name}}</td>
+        <td style="width:181px;">{{item.model}}</td>
+        <td style="width:181px;">{{item.number}}</td>
+        <td style="width:166px;">{{item.company}}</td>
+        <td style="width:166px;">{{item.currency}}</td>
+        <td style="width:181px;">{{item.goods_money}}</td>
         <td style="width:181px;">{{item.money}}</td>
       </tr>
     </table>
@@ -138,11 +138,11 @@
               <li>中信保授保额度</li>
             </ul>
               <ul class="u2 d-flex" >
-                <li style="margin-left:-40px;width:153px;">{{team.company}}</li>
-                <li style="width:158px;margin-right:28px;">{{team.linkman}}</li>
-                <li style="margin-right:83px;width:123px">{{team.phone}}</li>
-                <li style="width:170px;">{{team.etime}}</li>
-                <li >{{team.zx}}</li>
+                <li style="margin-left:-40px;width:153px;">{{ent.seller_corporate_name}}</li>
+                <li style="width:158px;margin-right:28px;">{{ent.seller_name}}</li>
+                <li style="margin-right:83px;width:123px">{{ent.seller_phone}}</li>
+                <li style="width:170px;">{{ent.update_at}}</li>
+                <li >{{ent.citic_quota}}</li>
               </ul>
           </div>
           <div>
@@ -154,15 +154,15 @@
               <li style="margin-left:16px;">是否分批次运出</li>
             </ul>
               <ul class="u2 d-flex" >
-                <li style="margin-left:-40px;margin-right:3px;">{{team.money}}</li>
-                <li style="width:142px;">{{team.paytype}}</li>
-                <li style="margin-right:40px;width:190px;margin-left:-2px;">{{team.goal}}</li>
-                <li style="margin-left:-29px;">{{team.ter}}</li>
-                <li style="margin-left:-12px;">{{team.yon}}</li>
+                <li style="margin-left:-40px;margin-right:3px;">{{ent.seller_contract_money}}</li>
+                <li style="width:142px;">{{ent.payment_method}}</li>
+                <li style="margin-right:40px;width:190px;margin-left:-2px;">{{ent.seller_objective_port}}</li>
+                <li style="margin-left:-29px;">{{ent.transaction_mode}}</li>
+                <li style="margin-left:-12px;">{{ent.is_batch==1?'是':'否'}}</li>
               </ul>
           </div>
           <div>备注</div>
-          <div style="font-size:14px;color:#0666A4;margin-top:9px;">{{team.remark}}</div>
+          <div style="font-size:14px;color:#0666A4;margin-top:9px;">{{ent.remark}}</div>
         </div>
         <!--  -->
         <div>
@@ -181,12 +181,12 @@
     </table>
     <table class="table">
       <tr v-for="(item,i) in teamtable" :key="i">
-        <td style="width:241px;">{{item.title}}</td>
-        <td style="width:181px;">{{item.type}}</td>
-        <td style="width:181px;">{{item.num}}</td>
-        <td style="width:166px;">{{item.unit}}</td>
-        <td style="width:166px;">{{item.hb}}</td>
-        <td style="width:181px;">{{item.price}}</td>
+        <td style="width:241px;">{{item.goods_name}}</td>
+        <td style="width:181px;">{{item.model}}</td>
+        <td style="width:181px;">{{item.number}}</td>
+        <td style="width:166px;">{{item.company}}</td>
+        <td style="width:166px;">{{item.currency}}</td>
+        <td style="width:181px;">{{item.goods_money}}</td>
         <td style="width:181px;">{{item.money}}</td>
       </tr>
     </table>
@@ -235,30 +235,30 @@ return {
     }
   ],
   // 合作方数据
-team:{
-  // 是否分批次运出
-  yon:"是",
- // 备注
-    remark:"张二娃很想吃肯德基所以要通过这个订单赚钱买肯德基",
-  // 采购总金额
-  money:"100万",
-  // 付款方式
-  paytype:"银行卡转账",
-  // 目的港
-  goal:"欧洲港",
-  // 其他要求
-  ter:"货到付款",
-  // 制定代贷
-  zx:"100万",
-  // 交货期
-  etime:"2019-07-29",
-  // 联系电话
-  phone:135000000,
-  // 联系人
-  linkman:"张二娃",
-  // 公司名称
-  company:"仰光强大",
-},
+// team:{
+//   // 是否分批次运出
+//   yon:"是",
+//  // 备注
+//     remark:"张二娃很想吃肯德基所以要通过这个订单赚钱买肯德基",
+//   // 采购总金额
+//   money:"100万",
+//   // 付款方式
+//   paytype:"银行卡转账",
+//   // 目的港
+//   goal:"欧洲港",
+//   // 其他要求
+//   ter:"货到付款",
+//   // 制定代贷
+//   zx:"100万",
+//   // 交货期
+//   etime:"2019-07-29",
+//   // 联系电话
+//   phone:135000000,
+//   // 联系人
+//   linkman:"张二娃",
+//   // 公司名称
+//   company:"仰光强大",
+// },
   // 委托方表格数据
   table:[
     {
@@ -364,7 +364,26 @@ if(this.other==""){
 mounted() {
 
 },
-beforeCreate() {}, //生命周期 - 创建之前
+beforeCreate() {
+  var	Token=window.localStorage.getItem('token')
+  var	that=this
+  var	params={
+  Token,
+  order_id:this.$route.query.order_id
+  }
+  this.$ajax.post('/order/getOrderAccess',params).then((res)=>{
+      console.log('请求订单准入结果',res)
+    if(res.data.code==200){
+      this.ent=res.data.data.entrust
+      this.table=res.data.data.goods
+      this.teamtable=res.data.data.goods
+    }else{
+    alert(res.data.msg)
+  }
+    }).catch((err)=>{
+      console.log('请求失败',err)
+    })
+}, //生命周期 - 创建之前
 beforeMount() {}, //生命周期 - 挂载之前
 beforeUpdate() {}, //生命周期 - 更新之前
 updated() {}, //生命周期 - 更新之后

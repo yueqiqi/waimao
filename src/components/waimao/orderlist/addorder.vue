@@ -28,8 +28,8 @@
     <!-- 合同类型 -->
       <el-form-item style="margin-left:101px;" label="合同类型">
         <el-select v-model="form.type" placeholder="请选择合同类型">
-          <el-option label="采购合同" value="采购合同"></el-option>
-          <el-option label="销售合同" value="销售合同"></el-option>
+          <el-option label="采购合同" value="1"></el-option>
+          <el-option label="销售合同" value="2"></el-option>
         </el-select>
       </el-form-item>
       <!-- 装运港 -->
@@ -46,7 +46,7 @@
       </el-form-item>
     <!-- 合同金额 -->
       <el-form-item style="margin-left:101px;" label="合同金额">
-        <el-input type="number" placeholder="请填写联系人电话" v-model="form.money"></el-input>
+        <el-input type="number" placeholder="请填写合同金额" v-model="form.money"></el-input>
       </el-form-item>
       <!-- 目的港P -->
       <el-form-item style="margin-left:101px;" label="目的港">
@@ -57,11 +57,11 @@
     <div class="d-flex">
      <!-- 联系方式 -->
       <el-form-item label="联系方式">
-        <el-input type="text" placeholder="请填写联系人联系方式" v-model="form.way"></el-input>
+        <el-input type="number" placeholder="请填写联系人联系方式" v-model="form.way"></el-input>
       </el-form-item>
       <!-- 价格条款 -->
       <el-form-item style="margin-left:101px;;" label="价格条款">
-        <el-input type="email" placeholder="请填写联系人邮箱" v-model="form.rule"></el-input>
+        <el-input type="email" placeholder="请填写价格条款" v-model="form.rule"></el-input>
       </el-form-item>
     <!-- 是否分批次运出 -->
       <el-form-item style="margin-left:101px;" label="是否分批次出运">
@@ -286,7 +286,7 @@
   </div>
   <!-- ---------------------------------------------------------------- -->
   <!-- 表格 -->
-  <div style="display:flex;justify-content: flex-end;margin-right:63px;">
+  <div style="display:flex;justify-content: flex-end;margin-right:94px;">
 
   <button @click="load2" style="border-top-right-radius:0;border-bottom-right-radius:0;" class="load d-flex"><div style="margin-left:7px;">导入表格</div><div><img style="width:12px;height:13px;margin-top:9px;margin-left:4px;" src="../../../assets/waimao/icon/load.png" alt=""></div></button>
  
@@ -590,13 +590,51 @@ submit(){
   var form=this.form
   var	Token=window.localStorage.getItem('token')
   var	that=this
+  var form=this.form
+  var form2=this.form2
   var	params={
   Token,
-  
+  entrust_id:this.entrust_id,
+  order_type:this.order_type,
+  contract:[{
+    corporate_name:form.company,
+    type:form.type,
+    loading_port:form.port,
+    contacts_name:form.linkMan,
+    contract_money:form.money,
+    objective_port:form.goal,
+    phone:form.way,
+    price_terms:form.rule,
+    is_batch:form.radio,
+    payment_type:form.paytype,
+    citic_quota:form.zx,
+    state:1,
+  }],
+  goods:[{
+    goods_name:form2.title,
+    model:form2.type,
+    number:form2.num,
+    currency:form2.hb,
+    goods_money:form2.price,
+    money:form2.money,
+    company:form2.unit
+  }]
   }
-  this.$ajax.post('/entrust/addEntrust',params).then((res)=>{
-      console.log('请求结果',res)
+  this.$ajax.post('/order/addOrder',params).then((res)=>{
+      console.log('请求添加订单结果',res)
     if(res.data.code==200){
+          this.$message({
+          message: '添加成功',
+          type: 'success'
+        });
+        setTimeout(() => {
+          that.$router.push({
+            path:'/neworder',
+            query:{
+              order_id:res.data.data
+            }
+          })
+        }, 1500);
     }else{
     alert(res.data.msg)
   }
@@ -606,14 +644,14 @@ submit(){
 
 
 
-  setTimeout(()=>{
-    this.$router.push({
-         path:'/mainsteps',
-         query:{
-          //  form,
-         }
-       })
-  },1000)
+  // setTimeout(()=>{
+  //   this.$router.push({
+  //        path:'/mainsteps',
+  //        query:{
+  //         //  form,
+  //        }
+  //      })
+  // },1000)
 },
 },
 //生命周期 - 创建完成（可以访问当前this实例）
@@ -624,7 +662,13 @@ created() {
 mounted() {
 
 },
-beforeCreate() {}, //生命周期 - 创建之前
+beforeCreate() {
+  var entrust_id=this.$route.query.entrust_id
+  var order_type=this.$route.query.order_type
+  this.entrust_id=entrust_id
+  this.order_type=order_type
+  console.log('接受业务经理传来的值',entrust_id,order_type)
+}, //生命周期 - 创建之前
 beforeMount() {}, //生命周期 - 挂载之前
 beforeUpdate() {}, //生命周期 - 更新之前
 updated() {

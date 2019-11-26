@@ -22,10 +22,10 @@
       </div>
       <!-- 上传文件 -->
       <div style="">
-            <el-upload class="upload-demo" ref="upload" action="https://jsonplaceholder.typicode.com/posts/" :on-preview="handlePreview" :on-remove="handleRemove" :on-success="success" :file-list="fileList" :auto-upload="false" :limit="1">
-              <button class="upload" ><img style="width:10px;height:10px;" src="../../../assets/waimao/icon/add.png" alt="">上传资料</button>
+            <el-upload class="upload-demo" ref="upload" :on-change="getFileName" action="http://192.168.0.140:8002/main/tools/upFile" :on-preview="handlePreview" :on-success="upsuc" :on-remove="handleRemove" :file-list="fileList" :auto-upload="true">
+            <el-button size="small" type="primary"  @click="submitUpload">上传资料</el-button>
             </el-upload>
-      <button class="btn mybtn" @click="submitUpload">确认提交</button>
+      <button class="btn mybtn" @click="sub">确认提交</button>
       </div>
       <!-- 提交按钮 -->
 <!--  -->
@@ -84,6 +84,8 @@ components: {},
 data() {
 //这里存放数据
 return {
+    // 后台返回上传地址
+  files:[],
   // 是否显示
   hidden2:false,
   hidden:true,
@@ -102,7 +104,7 @@ return {
   // 审核人
   shName:"李胖子",
   // 上传文件地址
-   fileList: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'},],
+   fileList: [],
 time:"2019-07-30",
 seconed:"10:00"
 };
@@ -113,32 +115,66 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
-  // 是否上传成功
-  success(){
-    console.log("上传成功")
-  },
-  // 确认提交
-  submitUpload(){
-    this.success()
-    this.$refs.upload.submit();
-    console.log("asd ")
-  setTimeout(()=>{
-    var _this=this
-    _this.hidden=false;
-    _this.hidden2=true
-  },2000)
-  },
-  // 
-  // 删除文件
-handleRemove(file, fileList) {
-  console.log("删除文件")
-        console.log(file, fileList);
-      },
-      // 点击文件列表中已上传的文件时的钩子
-handlePreview(file) {
-  console.log("查看")
-        console.log(file);
+getFileName(){
+  
+},
+upsuc(e){
+  console.log('上传成功',e)
+  this.files.push(e.data)
+  this.look=e.data.full_path
+  console.log('查看的地址',this.look)
+  // this.sp.push(e.data.path('_'))
+    // 为原数组添加新的下标
+  this.files.forEach((item,index)=> {
+    item.num = index+1;
+    item.type=5
+  })
+},
+submitUpload(file) {
+  this.$refs.upload.submit();
+},
+handleRemove(file, fileList,e) {
+  console.log('删除的文件地址',file,'删除的文件路径', fileList,e);
+  // this.files
+  for(var i in file){
+    for(var m in this.files){
+      if(file[i].name==this.files[m].file_name){
+        this.files.splice(m,1)
       }
+    }
+  }
+},
+handlePreview(file) {
+  // console.log('文件列表',file);
+  console.log('查看的文件地址',this.look)
+  window.open(this.look)
+},
+  // 确认提交
+  sub(){
+          /**
+       * 保存文件
+       */
+      var	that=this
+      // var	params={data:this.files}
+      this.$ajax.post('/tools/saveFile',({order_:that.order_id,type:3,data:this.files})).then((res)=>{
+          console.log('上传文件结果',res)
+        if(res.data.code==200){
+          this.$message({
+          message: '上传成功',
+          type: 'success'
+        });
+        }else{
+        alert(res.data.msg)
+      }
+        }).catch((err)=>{
+          console.log('请求失败',err)
+        })
+        /**
+         * 
+         */
+
+  },
+
 },
 //生命周期 - 创建完成（可以访问当前this实例）
 created() {
@@ -148,7 +184,10 @@ created() {
 mounted() {
 
 },
-beforeCreate() {}, //生命周期 - 创建之前
+beforeCreate() {
+  var order_id=this.$route.query.order_id
+  console.log('合同亲低昂',order_id)
+}, //生命周期 - 创建之前
 beforeMount() {}, //生命周期 - 挂载之前
 beforeUpdate() {}, //生命周期 - 更新之前
 updated() {}, //生命周期 - 更新之后

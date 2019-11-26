@@ -7,7 +7,7 @@
     <div class="title2">订单号</div>
     <div class="blue">{{orderNum}}</div>
     <div class="title2">客户类型</div>
-    <div class="blue">{{userType}}</div>
+    <div class="blue">{{userType==1?'一般业务':'融资业务'}}</div>
   </div>
   <div class="border" style="overflow:scroll;">
     <div class="order">订单流程</div>
@@ -125,9 +125,28 @@ export default{
   // 订单号
   orderNum:"20190729999",
   // 客户类型
-  userType:"一般业务客户"
+  userType:""
     }
   },
+  beforeCreate() {
+  var	Token=window.localStorage.getItem('token')
+  var	that=this
+  var	params={
+  Token,
+  order_id:this.$route.query.order_id
+  }
+  this.$ajax.post('/order/getOrderAccess',params).then((res)=>{
+      console.log('请求订单准入结果',res)
+    if(res.data.code==200){
+      this.orderNum=res.data.data.order.order_no
+      this.userType=res.data.data.order.user_type
+    }else{
+    alert(res.data.msg)
+  }
+    }).catch((err)=>{
+      console.log('请求失败',err)
+    })
+}, //生命周期 - 创建之前
    methods:{
     add(){
       console.log("新增订单")

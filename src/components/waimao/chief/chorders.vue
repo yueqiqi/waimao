@@ -37,25 +37,27 @@
         <div style="margin-right:30px;margin-top:19px;" class="d-flex">
           <!-- 状态选择 -->
           <div class="d-flex">
-            <div style="color:#333;font-weight:400;line-height:27px;margin-right:10px;">状态选择</div>
-            <el-select v-model="value" clearable placeholder="请选择" @change="statu">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            <div style="color:#333;font-weight:400;line-height:27px;margin-right:10px;">委托选择</div>
+            <el-select v-model="type" @change="bus">
+              <el-option label="全部委托" value=""></el-option>
+              <el-option label="委托采购" value="1"></el-option>
+              <el-option label="委托销售" value="2"></el-option>
             </el-select>
           </div>
           <!-- 业务选择 -->
           <div class="d-flex">
             <div style="color:#333;font-weight:400;line-height:27px;margin-right:10px;margin-left:20px;">业务选择</div>
-            <el-select v-model="type" @change="bus">
-              <el-option label="全部业务" value="全部业务"></el-option>
-              <el-option label="一般业务客户" value="一般业务客户"></el-option>
-              <el-option label="融资业务客户" value="融资业务客户"></el-option>
+            <el-select v-model="type2" @change="bus2">
+              <el-option label="全部业务" value=""></el-option>
+              <el-option label="一般业务" value="1"></el-option>
+              <el-option label="融资业务" value="2"></el-option>
             </el-select>
           </div>
           <!-- 按钮 -->
           <!-- 按钮 -->
-          <div style="margin-left:20px;">
+          <!-- <div style="margin-left:20px;">
             <button class="btn add" @click="add"> <img class="addimg" src="../../../assets/waimao/icon/add.png" alt="">添加新订单</button>
-          </div>
+          </div> -->
         </div>
       </div>
       <!-- 分页详情 -->
@@ -69,59 +71,59 @@
             <td style="height:40px;width:120px;background:rgba(237,237,237,1);">联系电话</td>
             <td style="height:40px;width:90px;background:rgba(237,237,237,1);">合同总金额</td>
             <td style="height:40px;width:80px;background:rgba(237,237,237,1);">付款方式</td>
-            <td style="height:40px;width:80px;background:rgba(237,237,237,1);">目的港</td>
+            <td style="height:40px;width:260px;background:rgba(237,237,237,1);">目的港</td>
             <td style="height:40px;width:90px;background:rgba(237,237,237,1);">交货日期</td>
-            <td style="height:40px;width:180px;background:rgba(237,237,237,1);">制定代贷信息与报关信息</td>
-            <td style="height:40px;width:80px;background:rgba(237,237,237,1);">其他要求</td>
-            <td style="height:40px;width:80px;background:rgba(237,237,237,1);">备注</td>
-            <td style="height:40px;width:90px;background:rgba(237,237,237,1);">订单状态</td>
+            <!-- <td style="height:40px;width:180px;background:rgba(237,237,237,1);">制定代贷信息与报关信息</td> -->
+            <!-- <td style="height:40px;width:80px;background:rgba(237,237,237,1);">其他要求</td> -->
+            <td style="height:40px;width:170px;background:rgba(237,237,237,1);">备注</td>
+            <!-- <td style="height:40px;width:90px;background:rgba(237,237,237,1);">订单状态</td> -->
             <td style="height:40px;width:206px;background:rgba(237,237,237,1);">操作</td>
-            <td style="height:40px;width:89px;background:rgba(237,237,237,1);">分配业务经理</td>
+            <td v-if="role_id!=2" style="height:40px;width:89px;background:rgba(237,237,237,1);">分配业务经理</td>
           </tr>       
         <tbody v-for="(item,i) in lists" :key="i" data-id="i" style="text-align:center" class="table">
             <!-- 编号 -->
             <td >{{item.id}}</td>
             <!-- 业务类型 -->
-            <td>{{item.type}}</td>
+            <td>{{item.type==1?'一般业务':'融资业务'}}</td>
             <!-- 委托方 -->
-            <td >{{item.uname}}</td>
+            <td >{{item.corporate_name}}</td>
             <!-- 联系人 -->
-            <td>{{item.peo}}</td>
+            <td>{{item.contacts}}</td>
             <!-- 联系电话 -->
             <td >{{item.phone}}</td>
             <!-- 采购合同总金额 -->
-            <td >{{item.allmoney}}</td>
+            <td >{{item.contract_money}}</td>
             <!-- 付款方式 -->
-            <td>{{item.pay}}</td>
+            <td>{{item.payment_type}}</td>
             <!-- 目的港 -->
-            <td>{{item.des}}</td>
+            <td>{{item.objective_port}}</td>
             <!-- 交货日期 -->
-            <td>{{item.date}}</td>
+            <td>{{item.delivery_date}}</td>
             <!-- 制定代贷信息与报关信息 -->
-            <td >{{item.dd}}</td>
+            <!-- <td >{{item.dd}}</td> -->
             <!-- 其他要求 -->
-            <td>{{item.other}}</td>
+            <!-- <td>{{item.other}}</td> -->
             <!-- 备注 -->
-            <td>{{item.rem}}</td>
+            <td>{{item.remarks}}</td>
             <!-- 订单状态 -->
-            <td>{{item.statu}}</td>
+            <!-- <td>{{item.statu}}</td> -->
             <!-- 操作 -->
             <td >
-              <button class="btn look" @click="look(i)">查看</button>
-              <button class="btn set" style="background:#42DC3E" @click="set(i)">通过</button>
-              <button class="btn set" style="background:#FF6600" @click="dellinkbtn(i)">拒绝</button>
+              <button v-if="role_id!=2" class="btn look" :data-id="item.id" :data-user="item.user_id" @click="look">查看</button>
+              <!-- <button class="btn set" style="background:#42DC3E" @click="set(i)">通过</button> -->
+              <button v-if="role_id!=2" class="btn set" style="background:#FF6600" @click="dellinkbtn(i)">拒绝</button>
+              <button @click="neworder" :data-entrust_id='item.id' :data-order_type='item.entrust_type' v-if="role_id==2" class="btn look" style="width:100px;">新增订单</button>
             </td>
-            <td>
+            <td v-if="role_id!=2">
+
               <div class="option2">
-              <el-select v-model="item.value2" placeholder=" ">
-                <el-option
-                  v-for="im in item.value"
-                  :key="im.value"
-                  :label="im.label"
-                  :value="im.value">
-                </el-option>
+              <el-select @change="choose" v-model="item.v" placeholder="请选择">
+                <el-option  v-for="(im,iq) in item.vm" :key="iq" data-id="999" :label="im.name" :value="im.id+'-'+item.id"></el-option>
               </el-select>
               </div>
+              <!-- <div v-for="(im,iq) in item.value2" :key="iq">
+                <div>xing:{{im.name}}</div>
+              </div> -->
             </td>
             <!-- ======================================================= -->
            
@@ -176,176 +178,25 @@ components: {
 data() {
 //这里存放数据
 return {
-
+    v1:'',
    // 明细弹窗
   tc:false,
   sh:false,
   // delusers:[],
   // 业务选择
-  type:"全部业务",
+  type2:'',
+  type:"",
   // 状态选择
-   options: [
-        {
-          value:"全部状态",
-          label:"全部状态"
-        },
-        {
-          value: '订单准入',
-          label: '订单准入'
-        }, {
-          value: '签订合同',
-          label: '签订合同'
-        }, {
-          value: '验货出货',
-          label: '验货出货'
-        }, {
-          value: '收款付款',
-          label: '收款付款'
-        }, {
-          value: '报关运输',
-          label: '报关运输'
-        }, {
-          value: '缴税退税',
-          label: '缴税退税'
-        }, {
-          value: '结算汇总',
-          label: '结算汇总'
-        }],
-        value: '全部状态',
+
   // 888888888888888888888888888888888888888888888888
   allpage: 10, //总页数
   cur: 1,//当前页码
   totalPage: 0,//当前条数
   // 888888888888888888888888888888888888888888888888
   // 列表
-  lists:[
-    // 第一个用户
-    {
-      id:"01222",
-      type:"出口业务",
-      uname:"仰光强大",
-      peo:"张三",
-      phone:13500000000,
-      allmoney:"500万",
-      pay:"电汇",
-      des:"欧洲港",
-      date:"2019-05-20",
-      dd:"是",
-      other:"",
-      rem:"",
-      statu:"订单准入",
-      value2:"",
-      value:[
-        {
-          label:"张三",
-          value:"张三"
-        },
-        {
-          label:"李四",
-          value:"李四"
-        },
-        {
-          label:"王麻子",
-          value:"王麻子"
-        }
-      ],
-    },
-    // 第二个用户
-    {
-      id:"9527",
-      type:"进口业务",
-      uname:"仰光强大",
-      peo:"张三",
-      phone:13500000000,
-      allmoney:"500万",
-      pay:"电汇",
-      des:"欧洲港",
-      date:"2019-05-20",
-      dd:"是",
-      other:"",
-      rem:"",
-      statu:"订单准入",
-      value2:"",
-      value:[
-        {
-          label:"张三",
-          value:"张三"
-        },
-        {
-          label:"李四",
-          value:"李四"
-        },
-        {
-          label:"王麻子",
-          value:"王麻子"
-        }
-      ],
-    },
-    // 第三个用户
-    {
-      id:"01222",
-      type:"进口业务",
-      uname:"仰光强大",
-      peo:"王麻子",
-      phone:13500000000,
-      allmoney:"500万",
-      pay:"电汇",
-      des:"欧洲港",
-      date:"2019-05-20",
-      dd:"是",
-      other:"",
-      rem:"",
-      statu:"订单准入",
-      value2:"",
-      value:[
-        {
-          label:"张三",
-          value:"张三"
-        },
-        {
-          label:"李四",
-          value:"李四"
-        },
-        {
-          label:"王麻子",
-          value:"王麻子"
-        }
-      ]
-    },
-    // 第四个用户
-    {
-      id:"9527",
-      type:"进口业务",
-      uname:"仰光强大",
-      peo:"李四",
-      phone:13500000000,
-      allmoney:"500万",
-      pay:"电汇",
-      des:"欧洲港",
-      date:"2019-05-20",
-      dd:"是",
-      other:"",
-      rem:"",
-      statu:"订单准入",
-      value2:"",
-      value:[
-        {
-          label:"张三",
-          value:"张三"
-        },
-        {
-          label:"李四",
-          value:"李四"
-        },
-        {
-          label:"王麻子",
-          value:"王麻子"
-        }
-      ]
-    },
-  ],
+  lists:[],
   // 用户总数
-  all:"300",
+  all:"",
   // 
   pickerOptions: {
     // disabledDate(time) {
@@ -419,12 +270,96 @@ watch: {
 },
 //方法集合
 methods: {
-  // 状态选择
-  statu(opt){
-    console.log(opt)
+  /**
+   * 业务经理新增订单跳转
+   */
+  neworder(e){
+    var entrust_id=e.target.dataset.entrust_id
+    var order_type=e.target.dataset.order_type
+    console.log(entrust_id,order_type,e)
+    this.$router.push({
+      path:'/addorder',
+      query:{
+        entrust_id,
+        order_type
+      }
+    })
   },
+/**
+ * 分配经理选择
+ */
+choose(e){
+  console.log('下拉框',e)
+  var end=e.split('-')
+  console.log('留下数组')
+  console.log(end[0],end[1])
+  var	Token=window.localStorage.getItem('token')
+  var	that=this
+  var	params={
+  Token,
+  id:end[1],
+  manager_id:end[0]
+  }
+  this.$ajax.post('/entrust/setEntrust',params).then((res)=>{
+      // console.log('请求结果',res)
+    if(res.data.code==200){
+      this.$message({
+          message: '分配成功',
+          type: 'success'
+        });
+    }else{
+    alert(res.data.msg)
+  }
+    }).catch((err)=>{
+      console.log('请求失败',err)
+    })
+},
+
+
+//委托选择
   bus(dat){
     console.log(dat)
+    this.entrust_type=dat
+      var	Token=window.localStorage.getItem('token')
+  var	that=this
+  var	params={
+  Token,
+  pageNum:1,
+  pageSize:13,
+  entrust_type :dat
+  }
+  this.$ajax.post('/entrust/listManager',params).then((res)=>{
+      console.log('请求委托订单结果',res)
+    if(res.data.code==200){
+      this.lists=res.data.data
+    }else{
+    alert(res.data.msg)
+  }
+    }).catch((err)=>{
+      console.log('请求失败',err)
+    })
+  },
+  // 业务选择
+  bus2(dat){
+      var	Token=window.localStorage.getItem('token')
+      this.ltype=dat
+  var	that=this
+  var	params={
+  Token,
+  pageNum:1,
+  pageSize:13,
+  type:dat
+  }
+  this.$ajax.post('/entrust/listManager',params).then((res)=>{
+      console.log('请求委托订单结果',res)
+    if(res.data.code==200){
+      this.lists=res.data.data
+    }else{
+    alert(res.data.msg)
+  }
+    }).catch((err)=>{
+      console.log('请求失败',err)
+    })
   },
    // 888888888888888888888888888888888888888888888888888888888888
   pageSkip(){
@@ -470,6 +405,25 @@ btnClick: function(data){//页码点击事件
 if(data != this.cur){
 this.cur = data 
 }
+ var	Token=window.localStorage.getItem('token')
+    var	that=this
+    var	params={
+    Token,
+    pageNum:this.cur,
+    pageSize:13,
+    type:this.ltype,
+    entrust_type:this.entrust_type
+    }
+    this.$ajax.post('/entrust/listManager',params).then((res)=>{
+        console.log('请求分页结果',res)
+      if(res.data.code==200){
+        this.lists=res.data.data
+      }else{
+      alert(res.data.msg)
+    }
+      }).catch((err)=>{
+        console.log('请求失败',err)
+      })
 //根据点击页数请求数据
 // this.lists(this.cur.toString());
 console.log("点击页码这是第"+this.cur+"页")
@@ -477,6 +431,25 @@ console.log("点击页码这是第"+this.cur+"页")
 pageClick: function(){
 //根据点击页数请求数据
 // this.dataListFn(this.cur.toString());
+      var	Token=window.localStorage.getItem('token')
+    var	that=this
+    var	params={
+    Token,
+    pageNum:this.cur,
+    pageSize:13,
+    type:this.ltype,
+    entrust_type:this.entrust_type
+    }
+    this.$ajax.post('/entrust/listManager',params).then((res)=>{
+        console.log('请求分页结果',res)
+      if(res.data.code==200){
+        this.lists=res.data.data
+      }else{
+      alert(res.data.msg)
+    }
+      }).catch((err)=>{
+        console.log('请求失败',err)
+      })
 console.log("这是第"+this.cur+"页")
 },  
 
@@ -492,42 +465,19 @@ console.log("这是第"+this.cur+"页")
     })
   },
   // 查看
-  look(i){
-    console.log(this.lists[i])
-    console.log(i)
-    var userName=this.lists[i].uname
+  look(e){
+    console.log(e)
     this.$router.push({
-      path:'/setuser',
+      path:'/orderDetail',
       query:{
-        userName,
-        id:1,
+        id:e.target.dataset.id,
+        user_id:e.target.dataset.user
       }
     })
   },
   // 编辑
   set(i){
     console.log(i)
-    // this.lists.sort(function(a,b){return (b-a)})
-    // 数组的修改
-    // this.lists.splice(i,1,{
-    //   id:"100",
-    //   usertype:"中方客户",
-    //   uname:"添加用户",
-    //   com:"小红花贸易有限公司",
-    //   peo:"张三",
-    //   phone:13500000000,
-    //   email:"123456789@qq.com",
-    //   address:"西安",
-    //   jointime:"2019-05-20",
-    //   })
-    // var userName=this.lists[i].uname
-    // this.$router.push({
-    //   path:'/setuser',
-    //   query:{
-    //     userName,
-    //     id:1,
-    //   }
-    // })
     buss.$emit("gb",i)   //$emit这个方法会触发一个事件
     this.stop()
     this.tc=true
@@ -552,10 +502,41 @@ console.log("这是第"+this.cur+"页")
     console.log("电话号码"+this.searchphone)
     console.log("开始时间"+this.stime)
     console.log("结束时间"+this.etime)
+    var	Token=window.localStorage.getItem('token')
+    var	that=this
+    var	params={
+    Token,
+    pageNum:1,
+    pageSize:13,
+    contacts:this.searchuser,
+    phone:this.searchphone,
+    sta_create:this.stime,
+    end_create:this.etime,
+    type:this.ltype,
+    entrust_type:this.entrust_type
+    }
+    this.$ajax.post('/entrust/listManager',params).then((res)=>{
+        console.log('请求结果',res)
+      if(res.data.code==200){
+        that.lists=res.data.data
+      }else{
+      alert(res.data.msg)
+    }
+      }).catch((err)=>{
+        console.log('请求失败',err)
+      })
   },
 },
 //生命周期 - 创建完成（可以访问当前this实例）
 created() {
+  /**
+   * 分配经理列表
+   */
+ 
+  /**
+   * 分配经理列表
+   */
+
   buss.$on("close",(data)=>{   //这里最好用箭头函数，不然this指向有问题
                   console.log("不是"+data[0])
                   console.log(data+"啊")
@@ -591,8 +572,13 @@ mounted() {
 beforeCreate() {
   var	Token=window.localStorage.getItem('token')
   var	that=this
+  var role_id=window.localStorage.getItem('role_id')
+  this.role_id=role_id
   var	params={
   Token,
+  pageNum:1,
+  pageSize:13,
+  type:0
   }
   this.$ajax.post('/entrust/listManager',params).then((res)=>{
       console.log('请求委托订单结果',res)
@@ -604,6 +590,41 @@ beforeCreate() {
     }).catch((err)=>{
       console.log('请求失败',err)
     })
+
+
+
+setTimeout(() => {
+    // var	Token=window.localStorage.getItem('token')
+  // var role_id=window.localStorage.getItem('role_id')
+  var	that=this
+  var	params={
+  Token,
+  role_id:2
+  }
+  this.$ajax.post('/user/listManager',params).then((res)=>{
+      console.log('请求分配经理列表结果',res)
+    if(res.data.code==200){
+      // var r1=JSON.parse(JSON.stringify(res.data.data).replace(/name/g, 'label'))
+      // var  r2=JSON.parse(JSON.stringify(r1).replace(/id/g, 'value'))
+      for(var i in this.lists){
+        that.lists[i].vm=res.data.data
+        that.lists[i].v1=''
+      }
+      // that.op2.v1=''
+      // that.op2=res.data.data
+    }else{
+    alert(res.data.msg)
+  }
+    }).catch((err)=>{
+      console.log('请求失败',err)
+    })
+    setTimeout(() => {
+      console.log('最后列表结果',this.lists)
+    }, 1000);
+}, 1000);
+
+
+
 }, //生命周期 - 创建之前
 beforeMount() {
   
