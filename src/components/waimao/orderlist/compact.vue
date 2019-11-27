@@ -1,6 +1,8 @@
 <!-- 合同签订 -->
 <template>
-<div class='compact'>
+<div>
+  <!-- 业务经理展示合同签订 -->
+  <div class='compact' v-if="role_id==2">
     <div class="compactTitle">合同签订</div>
     <div class="d-flex">
       <div class="time">签订时间</div>
@@ -70,7 +72,58 @@
       </ul>
 <!--  -->
     </div>
+  </div>
+
+
     <!-- ============================================================ -->
+<!-- 总监审核合同签订 -->
+<div class='compact' v-if="role_id==3">
+    <div class="compactTitle">合同签订</div>
+    <div class="d-flex">
+      <div class="time">签订时间</div>
+      <div>{{times}}<span style="margin-left:10px;">{{seconeds}}</span></div>
+    </div>
+    <!-- 上传合同 -->
+    <div class="border">
+      <div class="uptitle">外贸合同</div>
+      <div class="please">请提交申请资料</div>
+      <div class="d-flex ol">
+        <ol>
+          <li>境外采购合同</li>
+          <li>国内销售合同</li>
+        </ol>
+        <ol start="3">
+          <li>代理合同</li>
+          <li>担保合同</li>
+        </ol>
+      </div>
+      <!-- 上传文件 -->
+      <div style="">
+        <ul class="el-upload-list el-upload-list--text uu" v-for="(item,i) in fileLists" :key="i">
+          <li tabindex="0" >
+            <router-link to="item.url" class="el-upload-list__item-name">
+              <i class="el-icon-document">{{item.name}}</i>
+            </router-link>
+          </li>
+        </ul>
+      </div>
+      <!-- 提交按钮 -->
+
+<!--  -->
+    </div>
+    <div class="d-flex">
+      <div style="margin-top:20px;margin-right:18px;">
+        <span style="font-size:16px;color:#333;margin-right:10px;">审核结果</span>
+        <el-select v-model="state" placeholder="请选择审核状态">
+          <el-option label="通过" value="1"></el-option>
+          <el-option label="不通过" value="2"></el-option>
+        </el-select>
+      </div>
+      <div><button class="sub" @click="subs">确认提交</button></div>
+    </div>
+</div>
+
+
 </div>
 </template>
 
@@ -84,6 +137,19 @@ components: {},
 data() {
 //这里存放数据
 return {
+
+
+
+  // ??????????????????????????????????????????????????????????????????????
+  // 总监端合同签订
+  fileLists: [],
+    forms:{
+      name:"",
+    },
+    times:"2019-07-30",
+    seconeds:"10:00",
+    state:'',
+  // ??????????????????????????????????????????????????????????????????????
     // 后台返回上传地址
   files:[],
   // 是否显示
@@ -115,6 +181,46 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
+
+/**
+ * 总监端合同签订方法
+ */
+// 审核是否通过
+subs(){
+  // 设置订单状态
+  var is_fail
+  var state
+  console.log(this.state)
+  if(this.state==''){
+    is_fail=0
+  }else if(this.state==1){
+    is_fail==''
+    state=5
+  }else{
+    is_fail=1
+  }
+  var	Token=window.localStorage.getItem('token')
+  var	that=this
+  var	params={
+  Token,
+  is_fail,
+  order_id:this.order_id,
+  state,
+  }
+  this.$ajax.post('/order/setOrderState',params).then((res)=>{
+      console.log('请求订单通过结果',res)
+    if(res.data.code==200){
+      alert(res.data.msg)
+    }else{
+    alert(res.data.msg)
+  }
+    }).catch((err)=>{
+      console.log('请求失败',err)
+    })
+},
+////////////////////////////////////////////////////////////////////////////////
+
+
 getFileName(){
   
 },
@@ -151,18 +257,42 @@ handlePreview(file) {
 },
   // 确认提交
   sub(){
-          /**
-       * 保存文件
+    /**
+     * 保存文件
        */
       var	that=this
+    console.log('订单id',that.order_id)
       // var	params={data:this.files}
-      this.$ajax.post('/tools/saveFile',({order_:that.order_id,type:3,data:this.files})).then((res)=>{
+      this.$ajax.post('/tools/saveFile',({order_id:that.order_id,type:2,data:this.files})).then((res)=>{
           console.log('上传文件结果',res)
         if(res.data.code==200){
-          this.$message({
-          message: '上传成功',
-          type: 'success'
-        });
+          /**
+           * 改变订单状态
+           */
+          var	Token=window.localStorage.getItem('token')
+          var order_id=that.order_id
+          var	params={
+          Token,
+          state:3,
+          order_id:that.order_id
+          }
+          this.$ajax.post('/order/setOrderState',params).then((res)=>{
+              console.log('请求状态改变结果',res)
+            if(res.data.code==200){
+              this.$message({
+                message: '上传成功',
+                type: 'success'
+              });
+            }else{
+            alert(res.data.msg)
+          }
+            }).catch((err)=>{
+              console.log('请求失败',err)
+            })
+          /**
+           * 改变订单状态
+           */
+          
         }else{
         alert(res.data.msg)
       }
@@ -178,15 +308,37 @@ handlePreview(file) {
 },
 //生命周期 - 创建完成（可以访问当前this实例）
 created() {
-
+  var role_id=window.localStorage.getItem('role_id')
+  if(role_id==3){
+    var	Token=window.localStorage.getItem('token')
+    var	that=this
+    var	params={
+    Token,
+    order_id:this.order_id,
+    type:3
+    }
+    this.$ajax.post('/tools/getFile',params).then((res)=>{
+        console.log('请求总监端文件列表结果',res)
+      if(res.data.code==200){
+        this.fileLists=res.data.data
+      }else{
+      alert(res.data.msg)
+    }
+      }).catch((err)=>{
+        console.log('请求失败',err)
+      })
+  }
 },
 //生命周期 - 挂载完成（可以访问DOM元素）
 mounted() {
 
 },
 beforeCreate() {
+  var role_id=window.localStorage.getItem('role_id')
+  this.role_id=role_id
   var order_id=this.$route.query.order_id
   console.log('合同亲低昂',order_id)
+  this.order_id=order_id
 }, //生命周期 - 创建之前
 beforeMount() {}, //生命周期 - 挂载之前
 beforeUpdate() {}, //生命周期 - 更新之前
@@ -197,6 +349,75 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 }
 </script>
 <style scoped>
+.ol{
+  font-size:14px;
+font-family:Microsoft YaHei;
+font-weight:400;
+color:rgba(0,0,0,1);
+line-height:29px;
+margin-left:-23px;
+}
+/* 上传按钮 */
+.sub{
+  width:100px;
+height:30px;
+background:rgba(255,102,0,1);
+border-radius:10px;
+font-size:14px;
+font-family:Microsoft YaHei;
+font-weight:400;
+color:rgba(255,255,255,1);
+text-align: center;
+line-height: 30px;
+margin-top:19px;
+border:0
+}
+
+ul li{
+  list-style: none;
+  font-size:14px;
+font-family:Microsoft YaHei;
+font-weight:400;
+color:rgba(0,0,0,1);
+margin-top:-10px;
+}
+
+.uu{
+  margin-left:0!important;
+}
+.upload{
+  width:100px;
+  height:30px;
+  background:rgba(154,195,220,1);
+  border-radius:10px;
+  font-size:14px;
+  font-family:Microsoft YaHei;
+  font-weight:400;
+  color:rgba(255,255,255,1);
+  border:0;
+  }
+  /deep/ .el-upload-list__item{
+  width:300px;
+}
+.el-upload-list{
+  margin-bottom:23px;
+}
+
+/deep/ .el-select{
+  width:210px;
+height:30px;
+background:rgba(237,237,237,1);
+border-radius:10px;
+}
+/deep/ .el-input__inner{
+  width:210px;
+height:30px;
+background:rgba(237,237,237,1);
+border-radius:10px;
+}
+/deep/ .el-input__suffix{
+  top:5px;
+}
 /* @import url(); 引入公共css类 */
 .compactTitle{
   width:160px;

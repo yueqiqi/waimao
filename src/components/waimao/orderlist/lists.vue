@@ -64,58 +64,65 @@
       <!-- 分页详情 -->
       <div style="margin-left:21px;margin-top:22px;">
         <table>
+          <thead>
+
           <tr class="ths">
-            <td style="height:40px;width:80px;background:rgba(237,237,237,1);">编号</td>
+            <td style="height:40px;width:180px;background:rgba(237,237,237,1);">编号</td>
             <td style="height:40px;width:80px;background:rgba(237,237,237,1);">业务类型</td>
             <td style="height:40px;width:120px;background:rgba(237,237,237,1);">委托方</td>
             <td style="height:40px;width:90px;background:rgba(237,237,237,1);">联系人</td>
             <td style="height:40px;width:120px;background:rgba(237,237,237,1);">联系电话</td>
             <td style="height:40px;width:130px;background:rgba(237,237,237,1);">采购合同总金额</td>
             <td style="height:40px;width:90px;background:rgba(237,237,237,1);">付款方式</td>
-            <td style="height:40px;width:90px;background:rgba(237,237,237,1);">目的港</td>
+            <td style="height:40px;width:170px;background:rgba(237,237,237,1);">目的港</td>
             <td style="height:40px;width:90px;background:rgba(237,237,237,1);">交货日期</td>
-            <td style="height:40px;width:180px;background:rgba(237,237,237,1);">制定代贷信息与报关信息</td>
-            <td style="height:40px;width:90px;background:rgba(237,237,237,1);">其他要求</td>
-            <td style="height:40px;width:90px;background:rgba(237,237,237,1);">备注</td>
+            <!-- <td style="height:40px;width:180px;background:rgba(237,237,237,1);">制定代贷信息与报关信息</td> -->
+            <!-- <td style="height:40px;width:90px;background:rgba(237,237,237,1);">其他要求</td> -->
+            <td style="height:40px;width:180px;background:rgba(237,237,237,1);">备注</td>
             <td style="height:40px;width:95px;background:rgba(237,237,237,1);">订单状态</td>
-            <td style="height:40px;width:210px;background:rgba(237,237,237,1);">操作</td>
+            <td :style="role_id==4?'width:210px;height:40px;background:rgba(237,237,237,1);':'width:86px;height:40px;background:rgba(237,237,237,1)'">操作</td>
+            <td v-if="role_id==3" style="height:40px;width:88px;background:rgba(237,237,237,1);">审核</td>
           </tr>       
-        </table>
-        <table class="table">
-          <tr v-for="(item,i) in lists" :key="i" data-id="i">
+          </thead>
+          <tbody class="tb">
+            <tr v-for="(item,i) in lists" :key="i" data-id="i">
             <!-- 编号 -->
-            <td style="height:40px;width:81px;">{{item.id}}</td>
+            <td style="height:40px;width:181px;">{{item.id}}</td>
             <!-- 业务类型 -->
-            <td style="height:40px;width:81px;">{{item.type}}</td>
+            <td style="height:40px;width:81px;">{{item.user_type==1?'一般业务':'融资业务'}}</td>
             <!-- 委托方 -->
-            <td style="height:40px;width:121px;">{{item.uname}}</td>
+            <td style="height:40px;width:121px;">{{item.corporate_name}}</td>
             <!-- 联系人 -->
-            <td style="height:40px;width:91px;">{{item.peo}}</td>
+            <td style="height:40px;width:91px;">{{item.contacts}}</td>
             <!-- 联系电话 -->
             <td style="height:40px;width:121px;">{{item.phone}}</td>
             <!-- 采购合同总金额 -->
-            <td style="height:40px;width:131px;">{{item.allmoney}}</td>
+            <td style="height:40px;width:131px;">{{item.contract_money}}</td>
             <!-- 付款方式 -->
-            <td style="height:40px;width:91px;">{{item.pay}}</td>
+            <td style="height:40px;width:91px;">{{item.payment_type}}</td>
             <!-- 目的港 -->
-            <td style="height:40px;width:91px;">{{item.des}}</td>
+            <td style="height:40px;width:171px;">{{item.objective_port}}</td>
             <!-- 交货日期 -->
-            <td style="height:40px;width:91px;">{{item.date}}</td>
+            <td style="height:40px;width:91px;">{{item.delivery_date}}</td>
             <!-- 制定代贷信息与报关信息 -->
-            <td style="height:40px;width:181px;">{{item.dd}}</td>
+            <!-- <td style="height:40px;width:181px;">{{item.dd}}</td> -->
             <!-- 其他要求 -->
-            <td style="height:40px;width:91px;">{{item.other}}</td>
+            <!-- <td style="height:40px;width:91px;">{{item.other}}</td> -->
             <!-- 备注 -->
-            <td style="height:40px;width:91px;">{{item.rem}}</td>
+            <td style="height:40px;width:181px;">{{item.remarks}}</td>
             <!-- 订单状态 -->
-            <td style="height:40px;width:96px;">{{item.statu}}</td>
+            <td style="height:40px;width:96px;">{{item.state==1?'订单准入':(item.state==2?"签订合同":(item.state==3?"总监审核":(item.state==4?"总经理审核":(item.state==5?"待完成":(item.state==6?'汇总结算':'')))))}}</td>
             <!-- 操作 -->
-            <td style="height:40px;width:211px;">
+            <td :style="role_id==4?'height:40px;width:211px;':'height:40px;width:82px;'">
               <button class="btn look" @click="look(i)">查看</button>
-              <button class="btn set" @click="set(i)">编辑</button>
-              <button class="btn set" style="background:#E6B764" @click="dellinkbtn(i)">回收</button>
+              <!-- <button  class="btn set" @click="set(i)">编辑</button> -->
+              <button v-if="role_id==4" class="btn set" style="background:#E6B764" @click="dellinkbtn(i)">回收</button>
+            </td>
+            <td v-if="role_id==3" style="width:89px;height:40px;">
+              <button :disabled="item.state>3?true:false" class="btn set2" :style="item.state>3?'background:#B3B3B3':''" @click="audit(item.id)" >{{item.statu>3?'已审核':'审核'}}</button>
             </td>
           </tr>
+          </tbody>
         </table>
       </div>
     </div>
@@ -333,6 +340,22 @@ watch: {
 },
 //方法集合
 methods: {
+  /**
+   * 审核
+   */
+  audit(i){
+      console.log("审核"+i)
+      this.$router.push({
+        path:'/neworder',
+        query:{
+          order_id:i
+        }
+      })
+  },
+  /**
+   * 审核
+   */
+
   // 状态选择
   statu(opt){
     console.log(opt)
@@ -426,8 +449,14 @@ console.log("这是第"+this.cur+"页")
   },
   // 查看
   look(i){
-    console.log(this.lists[i])
+    // console.log(this.lists[i])
     console.log(i)
+    this.$router.push({
+      path:'',
+      query:{
+
+      }
+    })
   },
   // 编辑
   set(i){
@@ -478,37 +507,26 @@ console.log("这是第"+this.cur+"页")
 },
 //生命周期 - 创建完成（可以访问当前this实例）
 created() {
-var _this=this
-  for(var i in this.lists){
-    // console.log(this.lists[i].rem)
-    // console.log(i)
-    if(this.lists[i].rem==""){
-      this.lists[i].rem="-"
-      continue
-    }
-  }
-  for(var i in this.lists){
-    // console.log(this.lists[i].rem)
-    // console.log(i)
-    if(this.lists[i].other==""){
-      this.lists[i].other="-"
-        continue
-    }
-  }
+
 },
 //生命周期 - 挂载完成（可以访问DOM元素）
 mounted() {
   
 },
+
+
 beforeCreate() {
   var	Token=window.localStorage.getItem('token')
+  var role_id=window.localStorage.getItem('role_id')
+  this.role_id=role_id
   var	that=this
   var	params={
   Token,
   }
   this.$ajax.post('/order/listOrder',params).then((res)=>{
-      console.log('请求结果',res)
+      console.log('请求订单列表结果',res)
     if(res.data.code==200){
+      this.lists=res.data.data.list
     }else{
     alert(res.data.msg)
   }
@@ -540,6 +558,7 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
   width:1689px;height:50px;background:rgba(255,255,255,1);
   margin-top:1px;
   margin-left:-30px;
+  
 }
 /* 筛选查询 */
 .shaixuan{
@@ -621,6 +640,9 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
   margin-left:10px;
   line-height: 32px;
 }
+.tb>:nth-child(even){
+  background:#EAF1F6;
+}
 .title3{
   font-size:24px;
   font-family:Microsoft YaHei;
@@ -686,6 +708,18 @@ tr td{
   width:60px;
   height:20px;
   background:rgba(255,60,0,1);
+  border-radius:3px;
+  line-height: 20px;
+  color:#fff;
+  font-size:14px;
+  font-family:Microsoft YaHei;
+  font-weight:400;
+  margin-left:5px;
+}
+.set2{
+  width:60px;
+  height:20px;
+  background:#FF6600;
   border-radius:3px;
   line-height: 20px;
   color:#fff;

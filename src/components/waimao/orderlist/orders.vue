@@ -1,7 +1,10 @@
 <!-- 订单准入 -->
 <template>
 <div class=''>
+  <div style="display:flex;justify-content:space-between">
       <div class="orderin">订单准入</div>
+      <button style="margin-right:180px;border:0;background:red" @click="ht" class="orderin">确认准入</button>
+  </div>
       <div class="d-flex">
         <div style="color:#333;font-weight:bold;font-size:20px;">委托方公司信息</div>
         <div class="d-flex">
@@ -327,6 +330,33 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
+
+/**
+ * 确认准入
+ */
+ht(){
+  var	Token=window.localStorage.getItem('token')
+  var	that=this
+  var order_id=this.order_id
+  var	params={
+  Token,
+  state:2,
+  order_id
+  }
+  this.$ajax.post('/order/setOrderState',params).then((res)=>{
+      console.log('请求结果',res)
+    if(res.data.code==200){
+      alert('审核成功')
+    }else{
+    alert(res.data.msg)
+  }
+    }).catch((err)=>{
+      console.log('请求失败',err)
+    })
+},
+
+
+
   // 上传文件
    submitUpload() {
         this.$refs.upload.submit();
@@ -383,6 +413,7 @@ beforeCreate() {
     }).catch((err)=>{
       console.log('请求失败',err)
     })
+    this.order_id=this.$route.query.order_id
 }, //生命周期 - 创建之前
 beforeMount() {}, //生命周期 - 挂载之前
 beforeUpdate() {}, //生命周期 - 更新之前

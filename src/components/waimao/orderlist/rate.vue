@@ -7,9 +7,9 @@
       <div>{{time}}<span style="margin-left:10px;">{{seconed}}</span></div>
   </div>
   <!-- 商品信息 -->
- <div style="display:flex;justify-content:space-between;margin-right:113px;margin-top:30px;">
+ <div style="display:flex;justify-content:space-between;margin-right:233px;margin-top:30px;">
   <div class="rtitle">商品信息</div>
-  <div class="d-flex">
+  <div class="d-flex" style="">
   <button @click="load2" style="border-top-right-radius:0;border-bottom-right-radius:0;" class="load d-flex"><div style="margin-left:7px;">导入表格</div><div><img style="width:12px;height:13px;margin-top:9px;margin-left:4px;" src="../../../assets/waimao/icon/load.png" alt=""></div></button>
   <button @click="unload2" style="margin-left:1px;border-bottom-left-radius:0;border-top-left-radius: 0;" class="load d-flex"><div style="margin-left:7px;">导出表格</div><div><img style="width:12px;height:13px;margin-top:9px;margin-left:4px;" src="../../../assets/waimao/icon/load.png" alt=""></div></button>
   </div>
@@ -17,7 +17,7 @@
   <div>
     <table>
       <thead>
-        <td style="width:130px;">报关单号/发票号</td>
+        <!-- <td style="width:130px;">报关单号/发票号</td> -->
         <td style="width:280px;">商品名称</td>
         <td style="width:130px;">实际出货数量</td>
         <td style="width:160px;">发票金额</td>
@@ -25,26 +25,40 @@
         <td style="width:455px;">备注</td>
         <td style="width:200px;border:0;">操作</td>
       </thead>
-      <tbody v-for="(item,i) in details" :key="i">
-        <td>{{item.id}}</td>
-        <td>{{item.title}}</td>
-        <td>{{item.num}}</td>
-        <td style="color:#0666A4">
-          <el-input :disabled="dis==true?true:false" @change="invoice" type="number" v-model="item.invoice"></el-input>
-        </td>
-        <td style="color:#0666A4">
-          <el-input :disabled="dis==true?true:false" @change="tax" type="number" v-model="item.tax"></el-input>
-        </td>
-        <td style="color:#0666A4">
-          <el-input  :disabled="dis==true?true:false" @change="other" type="text" v-model="item.other"></el-input>
-        </td>
+      <tbody v-for="(item,i) in details" :key="i" style="border-bottom:1px solid #ccc">
+        <!-- <td>{{item.id}}</td> -->
+        <td>{{item.goods_name}}</td>
+        <td>{{item.number-item.shipment_num}}</td>
+        <td style="color:#0666A4">{{item.invoice}}</td>
+        <td style="color:#0666A4">{{item.tax}}</td>
+        <td style="color:#0666A4">{{item.other}}</td>
         <td style="border:0;">
-          <button class="set" @click="set(i)">编辑</button>
-          <button class="sub" @click="sub(i)">提交</button>
+          <button class="set" @click="dialogs(i)">编辑</button>
+          <button class="sub" :data-id="item.id" :data-idx="i" @click="sub">提交</button>
+          <button style="background:red" class="sub" @click="examine(i)">审核</button>
         </td>
       </tbody>
     </table>
   </div>
+        <!-- 弹出表格 -->
+        <el-dialog title="请填写信息" :visible.sync="dialogFormVisible">
+          <el-form :model="form">
+            <el-form-item label="发票金额" :label-width="formLabelWidth">
+              <el-input v-model="form.invoice" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="退税额" :label-width="formLabelWidth">
+              <el-input v-model="form.tax" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="备注" :label-width="formLabelWidth">
+              <el-input v-model="form.other" autocomplete="off"></el-input>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="success">确定</el-button>
+          </div>
+        </el-dialog>
+        <!-- 弹出表格 -->
 </div>
 </template>
 
@@ -58,62 +72,21 @@ components: {},
 data() {
   //这里存放数据
 return {
+    //弹出表格
+  formLabelWidth: '120px',
+  form:{
+    invoice:'',
+    tax:'',
+    other:'',
+  },
+  dialogFormVisible:false,
   // 簽訂時間
   time:"2019-07-30",
   seconed:"10:00",
   // 是否禁用
   dis:true,
   // table数据
-  details:[
-    {
-      id:1,
-      title:"中国石油",
-      num:"200",
-      invoice:"100.00",
-      tax:"100.00",
-      other:"",
-    },
-    {
-      id:2,
-      title:"中国石油",
-      num:"200",
-      invoice:"100.00",
-      tax:"100.00",
-      other:"",
-    },
-    {
-      id:3,
-      title:"中国石油",
-      num:"200",
-      invoice:"100.00",
-      tax:"100.00",
-      other:"",
-    },
-    {
-      id:4,
-      title:"中国石油",
-      num:"200",
-      invoice:"",
-      tax:"",
-      other:"",
-    },
-    {
-      id:5,
-      title:"中国石油",
-      num:"200",
-      invoice:"",
-      tax:"",
-      other:"",
-    },
-    {
-      id:6,
-      title:"中国石油",
-      num:"200",
-      invoice:"",
-      tax:"",
-      other:"",
-    }
-  ]
+  details:[]
 
 };
 },
@@ -123,6 +96,27 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
+    /**
+   * 表格添加
+   */
+success(){
+  console.log('填写的信息',this.form)
+  var idx = this.idx
+  this.details[idx].invoice=this.form.invoice
+  this.details[idx].tax=this.form.tax
+  this.details[idx].other=this.form.other
+  this.dialogFormVisible =false    
+  this.form={}
+},
+/**
+ * 编辑按钮
+ */
+    dialogs(i){
+      console.log(123,i)
+      this.dialogFormVisible =true
+      this.idx=i
+    },
+    ////////////////////////////////////////////////////////////
   load2(){
     console.log("导入按钮")
   },
@@ -130,22 +124,7 @@ methods: {
   unload2(){
     console.log("导出按钮")
   },
-  // 发票
-  invoice(event){
-    // console.log("值"+event)
-    console.log("mm"+event)
-    // console.log(i)
-    // e=this.details[i].has
-  },
-  // 退税
-  tax(e){
-    console.log(e)
-    // console.log(i)
-  },
-  // 备注
-  other(e){
-    console.log(e)
-  },
+ 
   // 编辑
   set(i){
     console.log("编辑")
@@ -153,26 +132,77 @@ methods: {
     this.dis=false
   },
   // 提交
-  sub(i){
-    console.log("编辑");
-    console.log("第"+i+"个"+this.details[i].invoice)
-    // this.details[i].has=this.details[i].has
+  sub(e){
+    var goods_id=e.target.dataset.id
+    var idx=e.target.dataset.idx
+    var details=this.details
+    console.log('商品id',goods_id,idx,e)
+    var	Token=window.localStorage.getItem('token')
+    var	that=this
+    var	params={
+    Token,
+    goods_id,
+    order_id:this.order_id,
+
+    }
+    this.$ajax.post('/order/setReturnTax',params).then((res)=>{
+        console.log('请求收款付款结果',res)
+      if(res.data.code==200){
+         /**
+             * 设置订单状态
+             */
+            var	Token=window.localStorage.getItem('token')
+            var	that=this
+            var	params={
+            Token,
+            order_id:this.order_id,
+            type:4,
+            }
+            this.$ajax.post('/order/setOrderState',params).then((res)=>{
+                console.log('请求订单状态结果',res)
+              if(res.data.code==200){
+
+              }else{
+              alert(res.data.msg)
+            }
+              }).catch((err)=>{
+                console.log('请求失败',err)
+              })
+            // ///////////////////////////////////////////////
+      }else{
+      alert(res.data.msg)
+    }
+      }).catch((err)=>{
+        console.log('请求失败',err)
+      })
   }
 },
 //生命周期 - 创建完成（可以访问当前this实例）
 created() {
-  for(var i in this.details){
-    if(this.details[i].other==""){
-      this.details[i].other="-"
-      continue
-    }
+  var	Token=window.localStorage.getItem('token')
+  var	that=this
+  var	params={
+  Token,
+  order_id:this.order_id
   }
+  this.$ajax.post('/order/getGoodsList',params).then((res)=>{
+      console.log('请求缴税退税结果',res)
+    if(res.data.code==200){
+      this.details=res.data.data
+    }else{
+    alert(res.data.msg)
+  }
+    }).catch((err)=>{
+      console.log('请求失败',err)
+    })
 },
 //生命周期 - 挂载完成（可以访问DOM元素）
 mounted() {
 
 },
-beforeCreate() {}, //生命周期 - 创建之前
+beforeCreate() {
+  this.order_id=this.$route.query.order_id
+}, //生命周期 - 创建之前
 beforeMount() {}, //生命周期 - 挂载之前
 beforeUpdate() {}, //生命周期 - 更新之前
 updated() {}, //生命周期 - 更新之后

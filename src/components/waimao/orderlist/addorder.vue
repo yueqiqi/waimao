@@ -188,8 +188,8 @@
     <!-- 合同类型 -->
       <el-form-item style="margin-left:101px;" label="合同类型">
         <el-select v-model="form3.type" placeholder="请选择合同类型">
-          <el-option label="采购合同" value="采购合同"></el-option>
-          <el-option label="销售合同" value="销售合同"></el-option>
+          <el-option label="采购合同" value="1"></el-option>
+          <el-option label="销售合同" value="2"></el-option>
         </el-select>
       </el-form-item>
       <!-- 装运港 -->
@@ -347,26 +347,7 @@ data() {
   //这里存放数据
 return {
   activeName:"内贸合同信息",
-table2:[
-    {
-      title:"什么什么石油",
-      type:"桶",
-      num:100,
-      unit:"t",
-      hb:"USD",
-      price:"1,000.00",
-      money:"100,000,00",
-    },
-    {
-      title:"什么什么石油",
-      type:"桶",
-      num:100,
-      unit:"吨",
-      hb:"USD",
-      price:"1,000.00",
-      money:"100,000,00",
-    }
-  ],
+table2:[],
   // 商品信息
   form4:{
     // 商品名称
@@ -411,26 +392,7 @@ table2:[
   },
   // 内贸
   // 表格
-  table:[
-    {
-      title:"什么什么石油",
-      type:"桶",
-      num:100,
-      unit:"吨",
-      hb:"USD",
-      price:"1,000.00",
-      money:"100,000,00",
-    },
-    {
-      title:"什么什么石油",
-      type:"桶",
-      num:100,
-      unit:"吨",
-      hb:"USD",
-      price:"1,000.00",
-      money:"100,000,00",
-    }
-  ],
+  table:[],
   // 商品信息
   form2:{
     // 商品名称
@@ -532,17 +494,62 @@ methods: {
 
 // 提交所有信息
 submit2(){
-  console.log(this.form)
-  console.log("省份："+this.province,"城市："+this.city,"地区："+this.area)
-  // var form=JSON.stdingify(this.form)
-  setTimeout(()=>{
-    this.$router.push({
-         path:'/neworder',
-         query:{
-          //  form,
-         }
-       })
-  },1000)
+
+    // var form=JSON.stdingify(this.form)
+  // var form=this.form
+  var	Token=window.localStorage.getItem('token')
+  var	that=this
+  var form3=this.form3
+  var form4=this.form4
+  var	params={
+  Token,
+  entrust_id:this.entrust_id,
+  order_type:this.order_type,
+  contract:[{
+    corporate_name:form3.company,
+    type:form3.type,
+    loading_port:form3.port,
+    contacts_name:form3.linkMan,
+    contract_money:form3.money,
+    objective_port:form3.goal,
+    phone:form3.way,
+    price_terms:form3.rule,
+    is_batch:form3.radio,
+    payment_type:form3.paytype,
+    citic_quota:form3.zx,
+    state:1,
+  }],
+  goods:[{
+    goods_name:form4.title,
+    model:form4.type,
+    number:form4.num,
+    currency:form4.hb,
+    goods_money:form4.price,
+    money:form4.money,
+    company:form4.unit
+  }]
+  }
+  this.$ajax.post('/order/addOrder',params).then((res)=>{
+      console.log('请求添加订单结果',res)
+    if(res.data.code==200){
+          this.$message({
+          message: '添加成功',
+          type: 'success'
+        });
+        setTimeout(() => {
+          that.$router.push({
+            path:'/neworder',
+            query:{
+              order_id:res.data.data
+            }
+          })
+        }, 1500);
+    }else{
+    alert(res.data.msg)
+  }
+    }).catch((err)=>{
+      console.log('请求失败',err)
+    })
 },
   // 内贸///////////////////////////////////////////////////////////////////
   // 删除

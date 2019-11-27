@@ -67,7 +67,7 @@
             <el-menu-item v-if="role_id!=1" :index="role_id==3||role_id==4||role_id==2?'/chorders':''">委托列表</el-menu-item>
             <div class="border" v-if="role_id!=1&&role_id!=2"></div>
             <!-- 经理端 -->
-            <el-menu-item :index="role_id==3||role_id==4?'/sfout':'/lists'">订单列表</el-menu-item>
+            <el-menu-item :index="role_id==3||role_id==4?'/lists':'/lists'">订单列表</el-menu-item>
             <!-- <div class="border"></div>
             <el-menu-item :index="role_id==3||role_id==4?'/chorderImport':''">进口订单</el-menu-item> -->
           </el-menu-item-group>

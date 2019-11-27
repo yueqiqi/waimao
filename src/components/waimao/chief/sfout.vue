@@ -110,7 +110,7 @@
               <button class="btn look" @click="look(i)">查看</button>
             </td>
             <td>
-              <button :disabled="item.audit=='已审核'?true:false" class="btn set" :style="item.audit=='已审核'?'background:#B3B3B3':''" @click="audit(i)" v-show="item.audit==''?false:true">{{item.audit}}</button>
+              <button :disabled="item.state>3?true:false" class="btn set" :style="item.state<3?'background:#B3B3B3':''" @click="audit(i)" v-show="item.audit==''?false:true">{{item.audit}}</button>
             </td>
             <!-- ======================================================= -->
            

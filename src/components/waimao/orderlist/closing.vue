@@ -187,29 +187,7 @@ back:"",
   // 是否禁用
   dis:true,
   // table数据
-  details:[
-    {
-      purchase:"100000",
-      sell:"100000",
-      rate:"0.1",
-      tax:"10000",
-      expense:"100",
-      othermoney:"100",
-      gross:"",
-      other:"",
-    },
-    {
-      purchase:"100000",
-      sell:"100000",
-      rate:"0.1",
-      tax:"10000",
-      expense:"100",
-      othermoney:"100",
-      gross:"",
-      other:"",
-    },
-   
-  ]
+  details:[]
 
 };
 },
@@ -300,6 +278,30 @@ toThousands(num) {
 },
 //生命周期 - 创建完成（可以访问当前this实例）
 created() {
+
+  /**
+   * 获取商品列表
+   */
+  var	Token=window.localStorage.getItem('token')
+  var	that=this
+  var	params={
+  Token,
+  order_id:this.order_id
+  }
+  this.$ajax.post('/order/getGoodsList',params).then((res)=>{
+      console.log('请求结算汇总结果',res)
+    if(res.data.code==200){
+      this.details=this.data.data
+    }else{
+    alert(res.data.msg)
+  }
+    }).catch((err)=>{
+      console.log('请求失败',err)
+    })
+
+
+
+
   for(var i in this.details){
     if(this.details[i].other==""){
       this.details[i].other="-"
@@ -352,7 +354,9 @@ for(var m in this.details){
 mounted() {
 
 },
-beforeCreate() {}, //生命周期 - 创建之前
+beforeCreate() {
+  this.order_id=this.$route.query.order_id
+}, //生命周期 - 创建之前
 beforeMount() {}, //生命周期 - 挂载之前
 beforeUpdate() {
   

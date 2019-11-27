@@ -1,4 +1,4 @@
-<!-- 收款付款 -->
+<!-- 收款付款--出口 -->
 <template>
 <div class='receiving'>
   <div class="receivingTitle">收款付款</div>
@@ -16,25 +16,39 @@
         <td style="width:130px;">结算完结</td>
         <td style="width:156px;border:0;">操作</td>
       </thead>
-      <tbody v-for="(item,i) in details" :key="i">
-        <td>{{item.title}}</td>
-        <td>{{item.num}}</td>
+      <tbody v-for="(item,i) in details" :key="i" style="border-bottom:1px solid #ccc">
+        <td>{{item.goods_name}}</td>
+        <td>{{item.number}}</td>
         <td style="color:#FF0000">{{item.gat}}</td>
-        <td>
-          <el-input :disabled="dis==true?true:false" @change="has" type="number" v-model="item.has"></el-input>
-        </td>
+        <td>{{item.has}}</td>
         <td style="color:#FF0000">{{item.pay}}</td>
-        <td>
-          <el-input  :disabled="dis==true?true:false" @change="payed" type="number" v-model="item.payed"></el-input>
-        </td>
+        <td>{{item.payed}}</td>
         <td>{{item.close}}</td>
         <td>
-          <button class="set" @click="set(i)">编辑</button>
-          <button class="sub" @click="sub(i)">提交</button>
+          <button class="set" @click="dialogs(i)">编辑</button>
+          <button class="sub" :data-id="item.id" :data-idx="i" @click="sub">提交</button>
         </td>
       </tbody>
     </table>
   </div>
+
+
+        <!-- 弹出表格 -->
+        <el-dialog title="请填写信息" :visible.sync="dialogFormVisible">
+          <el-form :model="form">
+            <el-form-item label="已收款" :label-width="formLabelWidth">
+              <el-input v-model="form.has" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="已付款" :label-width="formLabelWidth">
+              <el-input v-model="form.payed" autocomplete="off"></el-input>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="success">确定</el-button>
+          </div>
+        </el-dialog>
+        <!-- 弹出表格 -->
 </div>
 </template>
 
@@ -48,31 +62,17 @@ components: {},
 data() {
   //这里存放数据
 return {
+  //弹出表格
+  formLabelWidth: '120px',
+  form:{
+    has:'',
+    paued:'',
+  },
+  dialogFormVisible:false,
   // 是否禁用
   dis:true,
   // table数据
-  details:[
-    {
-      id:1,
-      title:"中国石油",
-      num:"200",
-      gat:"10,000.00",
-      has:"",
-      pay:"10,000.00",
-      payed:"",
-      close:"是",
-    },
-    {
-      id:2,
-      title:"中国石油",
-      num:"200",
-      gat:"10,000.00",
-      has:"",
-      pay:"10,000.00",
-      payed:"",
-      close:"是",
-    }
-  ]
+  details:[]
 
 };
 },
@@ -82,6 +82,26 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
+  /**
+   * 表格添加
+   */
+success(){
+  console.log('填写的信息',this.form)
+  var idx = this.idx
+  this.details[idx].has=this.form.has
+  this.details[idx].payed=this.form.payed
+  this.dialogFormVisible =false    
+  this.form={}
+},
+/**
+ * 编辑按钮
+ */
+    dialogs(i){
+      console.log(123,i)
+      this.dialogFormVisible =true
+      this.idx=i
+    },
+////////////////////////////////////////
   has(event){
     // console.log("值"+event)
     console.log("mm"+event)
@@ -92,26 +112,82 @@ methods: {
     console.log(e)
     // console.log(i)
   },
-  set(i){
-    console.log("编辑")
-    console.log(i)
-    this.dis=false
-  },
-  sub(i){
-    console.log("编辑");
-    console.log(this.details[i].has)
-    // this.details[i].has=this.details[i].has
+  /**
+   * 收款付款提交
+   */
+  sub(e){
+    var goods_id=e.target.dataset.id
+    var idx=e.target.dataset.idx
+    var details=this.details
+    console.log('商品id',goods_id,idx,e)
+    var	Token=window.localStorage.getItem('token')
+    var	that=this
+    var	params={
+    Token,
+    goods_id,
+    collect_money:details[idx].has,
+    pay_money:details[idx].payed
+    }
+    this.$ajax.post('/order/setGoodsPayment',params).then((res)=>{
+        console.log('请求收款付款结果',res)
+      if(res.data.code==200){
+         /**
+             * 设置订单状态
+             */
+            var	Token=window.localStorage.getItem('token')
+            var	that=this
+            var	params={
+            Token,
+            order_id:this.order_id,
+            type:2,
+            }
+            this.$ajax.post('/order/setOrderState',params).then((res)=>{
+                console.log('请求订单状态结果',res)
+              if(res.data.code==200){
+              }else{
+              alert(res.data.msg)
+            }
+              }).catch((err)=>{
+                console.log('请求失败',err)
+              })
+            // ///////////////////////////////////////////////
+      }else{
+      alert(res.data.msg)
+    }
+      }).catch((err)=>{
+        console.log('请求失败',err)
+      })
   }
 },
 //生命周期 - 创建完成（可以访问当前this实例）
 created() {
-
+  /**
+   * 商品列表
+   */
+  var	Token=window.localStorage.getItem('token')
+  var	that=this
+  var	params={
+  Token,
+  order_id:this.order_id
+  }
+  this.$ajax.post('/order/getGoodsList',params).then((res)=>{
+      console.log('收款付款请求商品列表结果',res)
+    if(res.data.code==200){
+      this.details=res.data.data
+    }else{
+    alert(res.data.msg)
+  }
+    }).catch((err)=>{
+      console.log('请求失败',err)
+    })
 },
 //生命周期 - 挂载完成（可以访问DOM元素）
 mounted() {
 
 },
-beforeCreate() {}, //生命周期 - 创建之前
+beforeCreate() {
+  this.order_id=this.$route.query.order_id
+}, //生命周期 - 创建之前
 beforeMount() {}, //生命周期 - 挂载之前
 beforeUpdate() {}, //生命周期 - 更新之前
 updated() {}, //生命周期 - 更新之后
